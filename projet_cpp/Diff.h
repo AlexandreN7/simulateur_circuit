@@ -9,7 +9,7 @@ class Equation_diff
 {
     public:
         Equation_diff();
-	//	Equation_diff(double,double);
+	Equation_diff(double,double);// constructeur parametrique
         virtual void resolution(){};
 
     protected:
@@ -27,7 +27,7 @@ class Ordre1 : public Equation_diff
 {
     public:
         Ordre1();
-	//	Ordre1(double);
+	Ordre1(double); // constructeur parametrique
         virtual void resolution(){};
     protected:
 		double condition1;
@@ -52,7 +52,7 @@ class  RC : public Ordre1
 {
     public:
         RC();
-//		RC(double,double);
+	RC(double,double);
         void resolution();
     protected:
         double fonction_propre( double , double);
@@ -69,7 +69,7 @@ class  RC_diode : public Ordre1
 {
     public:
         RC_diode();
-//		RC_diode(double,double,double);
+		RC_diode(double,double,double);
         void resolution();
     protected:
         double fonction_propre(double , double, double );
@@ -90,7 +90,7 @@ class Ordre2 : public Equation_diff
 {
 public:
     Ordre2();
-//	Ordre2(double,double);
+	Ordre2(double,double);
     virtual void resolution(){};
 
 
@@ -107,7 +107,7 @@ class Fonction2 : public Ordre2
 public:
 
 	Fonction2();
-//	Fonction2(double);
+	Fonction2(double);
 	void resolution();
 protected:
 	double fonction_exacte(double,double,double,double);
