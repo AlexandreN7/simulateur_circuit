@@ -1,7 +1,7 @@
 clear all;
 close all;
 
-toto=importdata('test.txt')
+toto=importdata('Simulation.txt')
 
 
 hold on;
