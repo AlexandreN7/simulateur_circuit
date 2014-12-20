@@ -147,7 +147,7 @@ Triangulaire::Triangulaire()
 double Triangulaire::calcul_tension(double tps)
 {
 	double valeur;
-	if ( (tps>tps_start) && (tps<(tps_start+duree))) {
+	if ( (tps>tps_start) && (tps<(tps_start))) {
 		valeur=offset;
 	}
 

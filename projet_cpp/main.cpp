@@ -3,6 +3,7 @@
 #include "Diff.h"
 
 
+void menu(void);
 
 
 int main()
@@ -25,26 +26,49 @@ int main()
 	double C2 = 0.1e-6; // Condensateur du circuit RLC_parallèle
 	double L1 = 10e-9; // Bobine du circuit RLC_parallèle
 
+	menu();
+	return 0;
+}
 
-  /*  Carre signal;
-	for (double i = 0 ; i< 1 ; i=i+0.01)
+
+void menu(void)
+{
+	int choix =0;
+	cout<< " Bienvenue "<<endl;
+	cout<< "Que voulez vous simuler ?"<<endl;
+	cout<<endl;
+	cout<< " 1/ Fonction type du premier ordre "<<endl;
+	cout<< " 2/ Circuit RC "<<endl;
+	cout<< " 3/ Circuit RC avec une diode en serie "<<endl;
+	cout<< " 4/ Fonction type du 2nd ordre"<<endl;
+	cout<< " 5/ RLC serie"<<endl;
+	cout<< " 6/ RLC parallele"<<endl;
+	cin>> choix;
+
+	Equation_diff *simulation;
+	switch (choix)
 	{
-    signal.calcul_tension(i);
+		case 1:
+			simulation = new Fonction1();
+			break;
+		case 2:
+			simulation = new RC();
+			break;
+		case 3:
+			simulation = new RC_diode;
+			break;
+		case 4:
+			simulation = new Fonction2();
+			break;
+		case 5:
+			simulation = new RLC_serie();
+			break;
+		case 6:
+			simulation = new RLC_parallele();
+			break;
+		default :;	
 
-	}*/
-        
- 
+	}
 
-   // Equation_diff *patate;
-   // patate = new Equation_diff();
-   // patate->resolution();
-
-   Equation_diff *patate;
-   patate=new RC();
-   patate->resolution();
-
-//	   Equation_diff *patate;
-//   patate=new RLC_parallele();
- // patate->resolution();
-    return 0;
+	simulation->resolution();
 }
