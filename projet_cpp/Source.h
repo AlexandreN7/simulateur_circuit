@@ -6,78 +6,78 @@ using namespace std;
 
 class Source
 {
-public:
-   // Source(double tps_start , double amp , double offset);
-    Source();
-    //~Source();
-    virtual double calcul_tension(double tps){return 0;};
+	public:
+		// Source(double tps_start , double amp , double offset);
+		Source();
+		//~Source();
+		virtual double calcul_tension(double tps){return 0;};
 
 
-protected:
-    double tps_start;
-    double amp;
-    double offset;
+	protected:
+		double tps_start;
+		double amp;
+		double offset;
 
-private:
+	private:
 };
 
 /////////////////////////////////////////////////////////
 class Signal_Perio : public Source
 {
-public:
-   // Signal_Perio(double frequency);
-    Signal_Perio();
-    //~Signal_Perio();
+	public:
+		// Signal_Perio(double frequency);
+		Signal_Perio();
+		//~Signal_Perio();
 
-    virtual double calcul_tension(double tps)=0;
+		virtual double calcul_tension(double tps)=0;
 
-protected:
-       double frequency;
+	protected:
+		double frequency;
 
-private:
+	private:
 };
 
 
 class Signal_Noperio : public Source
 {
-public:
-   // Signal_Noperio(double duree);
-    Signal_Noperio();
-   // ~Signal_Noperio();
+	public:
+		// Signal_Noperio(double duree);
+		Signal_Noperio();
+		// ~Signal_Noperio();
 
 
-    virtual double calcul_tension(double tps)=0;
+		virtual double calcul_tension(double tps)=0;
 
-protected:
-       double duree;
+	protected:
+		double duree;
 
-private:
+	private:
 };
 ////////////////////////////////////////////////////////
 
 
 class Echelon : public Signal_Noperio
 {
-public:
-    Echelon();
-   // ~Echelon();
+	public:
+		Echelon();
+		// ~Echelon();
 
-   double calcul_tension(double tps);
-protected:
+		double calcul_tension(double tps);
+	protected:
 
-private:
+	private:
 };
 
 class Rectangulaire : public Signal_Noperio
 {
-public:
-    Rectangulaire();
-  //  ~Rectangulaire();
-;
-    double calcul_tension(double tps);
-protected:
+	public:
+		Rectangulaire();
+		//  ~Rectangulaire();
+		;
+		double calcul_tension(double tps);
+	protected:
 
-private:
+	private:
 
 };
 
@@ -86,43 +86,42 @@ private:
 
 class Sinus : public Signal_Perio
 {
-public:
-    Sinus();
-  //  ~Sinus();
+	public:
+		Sinus();
+		//  ~Sinus();
 
-    double calcul_tension(double tps);
+		double calcul_tension(double tps);
 
-protected:
-private:
+	protected:
+	private:
 };
 
 
 class Triangulaire : public Signal_Perio
 {
-public:
-    Triangulaire();
-  //  ~Triangulaire();
+	public:
+		Triangulaire();
+		//  ~Triangulaire();
 
-    double calcul_tension(double tps);
+		double calcul_tension(double tps);
 
-protected:
-
-private:
+	protected:
+	private:
 };
 
 class Carre : public Signal_Perio
 {
-public:
-    Carre();
-//	Carre(double,double,double,double,double);
- //   ~Carre();
+	public:
+		Carre();
+		//	Carre(double,double,double,double,double);
+		//   ~Carre();
 
-    double calcul_tension(double tps);
+		double calcul_tension(double tps);
 
-protected:
-       double dc;
+	protected:
+		double dc;
 
-private:
+	private:
 };
 
 

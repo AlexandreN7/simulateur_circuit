@@ -5,12 +5,12 @@
 
 Source::Source()
 {
-    //ctor
+	//ctor
 }
 
 /*Source::~Source()
-{
-    //dtor
+  {
+//dtor
 }*/
 ////////////////////////////////////////////////////////////////////
 
@@ -19,12 +19,12 @@ Source::Source()
 
 Signal_Noperio::Signal_Noperio()
 {
-    //ctor
+	//ctor
 }
 
 /*Signal_Noperio::~Signal_Noperio()
-{
-    //dtor
+  {
+//dtor
 }*/
 
 
@@ -33,13 +33,13 @@ Signal_Noperio::Signal_Noperio()
 
 Signal_Perio::Signal_Perio()
 {
-    //ctor
+	//ctor
 }
 
 
 /*Signal_Perio::~Signal_Perio()
-{
-    //dtor
+  {
+//dtor
 }*/
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,11 +48,11 @@ Signal_Perio::Signal_Perio()
 Echelon::Echelon()
 {
 	cout << " entrer le temps de start" <<endl;
-    cin >> this->tps_start;
+	cin >> this->tps_start;
 	cout << " entrer l'amplitude" <<endl;
-    cin >> this->amp;
+	cin >> this->amp;
 	cout << " entrer l'offset" <<endl;
-    cin >> this->offset;
+	cin >> this->offset;
 }
 
 
@@ -74,20 +74,34 @@ double Echelon::calcul_tension(double tps)
 
 }
 /*Echelon::~Echelon()
-{
-    //dtor
+  {
+//dtor
 }*/
 
 Rectangulaire::Rectangulaire()
 {
-	cout << " entrer le temps de start" <<endl;
-    cin >> this->tps_start;
-	cout << " entrer l'amplitude" <<endl;
-    cin >> this->amp;
-	cout << " entrer l'offset" <<endl;
-    cin >> this->offset;
-	cout << " entrer la duree" <<endl;
-    cin >> this->duree;
+	int choix = 0;
+	cout << "Voulez vous la source rectangulaire par defaut (1) ou manuelle (2)" << endl;
+	cout <<endl;
+	cin >> choix;
+	if (choix == 2)
+	{
+		cout << " entrer le temps de start" <<endl;
+		cin >> this->tps_start;
+		cout << " entrer l'amplitude" <<endl;
+		cin >> this->amp;
+		cout << " entrer l'offset" <<endl;
+		cin >> this->offset;
+		cout << " entrer la duree" <<endl;
+		cin >> this->duree;
+	}
+	else
+	{
+		this->tps_start=0;
+		this->amp=1;
+		this->offset=0;
+		this->duree=100e-9;
+	}
 }
 
 double Rectangulaire::calcul_tension(double tps)
@@ -101,11 +115,11 @@ double Rectangulaire::calcul_tension(double tps)
 		valeur = offset;
 	}
 
-return valeur;
+	return valeur;
 }
 /*Rectangulaire::~Rectangulaire()
-{
-    //dtor
+  {
+//dtor
 }*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -113,32 +127,50 @@ return valeur;
 Sinus::Sinus()
 {
 	cout << " entrer le temps de start" <<endl;
-    cin >> this->tps_start;
+	cin >> this->tps_start;
 	cout << " entrer l'amp" <<endl;
-    cin >> this->amp;
+	cin >> this->amp;
 	cout << " entrer l'offset" <<endl;
-    cin >> this->offset;
+	cin >> this->offset;
 	cout << " entrer la fréquence" <<endl;
-    cin >> this->frequency;
+	cin >> this->frequency;
 }
 
 
 double Sinus::calcul_tension(double tps)
 {
-    cout << amp*sin(2*3.14*frequency*(tps + tps_start))+offset<<endl;
-    return amp*sin(2*3.14*frequency*(tps + tps_start))+offset;
+	cout << amp*sin(2*3.14*frequency*(tps + tps_start))+offset<<endl;
+	return amp*sin(2*3.14*frequency*(tps + tps_start))+offset;
 }
 /*Sinus::~Sinus()
-{
-    //dtor
+  {
+//dtor
 }*/
 
 Triangulaire::Triangulaire()
 {
-    cin >> this->tps_start;
-    cin >> this->amp;
-    cin >> this->offset;
-    cin >> this->frequency;
+	int choix =0;
+	cout << "Voulez vous la source rectangulaire par defaut (1) ou manuelle (2)" << endl;
+	cout <<endl;
+	cin >> choix;
+	if (choix == 2)
+	{
+		cout << " entrer le temps de start" <<endl;
+		cin >> this->tps_start;
+		cout << " amplitude ?" <<endl;
+		cin >> this->amp;
+		cout << " offset ?" <<endl;
+		cin >> this->offset;
+		cout << "frequence ?" <<endl;
+		cin >> this->frequency;
+	}
+	else 
+	{
+		this->tps_start=0;
+		this->amp=1;
+		this->offset=0;
+		this->frequency=10e6; //10 MHz
+	}
 }
 
 
@@ -155,26 +187,40 @@ double Triangulaire::calcul_tension(double tps)
 		valeur = offset;
 	}
 
-return valeur;
+	return valeur;
 }
 /*Triangulaire::~Triangulaire()
-{
-    //dtor
+  {
+//dtor
 }*/
 
 Carre::Carre()
 {
-	cout << " entrer le temps de start" <<endl;
-    cin >> this->tps_start;
-	cout << " amplitude ?" <<endl;
-    cin >> this->amp;
-	cout << " offset ?" <<endl;
-    cin >> this->offset;
-	cout << "frequence ?" <<endl;
-    cin >> this->frequency;
-	cout << "duty cycle ?" <<endl;
-    cin >> this->dc;
-    //ctor
+	int choix =0;
+	cout << "Voulez vous la source rectangulaire par defaut (1) ou manuelle (2)" << endl;
+	cout <<endl;
+	cin >> choix;
+	if (choix == 2)
+	{
+		cout << " entrer le temps de start" <<endl;
+		cin >> this->tps_start;
+		cout << " amplitude ?" <<endl;
+		cin >> this->amp;
+		cout << " offset ?" <<endl;
+		cin >> this->offset;
+		cout << "frequence ?" <<endl;
+		cin >> this->frequency;
+		cout << "duty cycle ?" <<endl;
+		cin >> this->dc;
+	}
+	else 
+	{
+		this->tps_start=0;
+		this->amp=1;
+		this->offset=0;
+		this->frequency=10e6; //10 MHz
+		this->dc=0.5; // signal créneau
+	}
 }
 
 
@@ -200,13 +246,13 @@ double Carre::calcul_tension(double tps)
 		}
 
 	}
-//	cout <<"fmod(abs(tps-tps_start),periode)" <<fmod(tps-tps_start,periode) <<endl;
-//	cout <<dc*periode<<endl;
+	//	cout <<"fmod(abs(tps-tps_start),periode)" <<fmod(tps-tps_start,periode) <<endl;
+	//	cout <<dc*periode<<endl;
 	return valeur;
 }
 /*Carre::~Carre()
-{
-    //dtor
+  {
+//dtor
 }*/
 
 

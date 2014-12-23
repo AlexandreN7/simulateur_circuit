@@ -51,7 +51,7 @@ Ordre1::Ordre1(double condition)
 }
 
 
-
+///////////////////////////////////////////////////FONCTION1///////////////////////////////////////////////////////////////
 Fonction1::Fonction1()
 {
 }
@@ -67,7 +67,7 @@ void Fonction1::resolution()
 	double u = condition1;
 	double borne = borne_sup/(N+1);
 
-	ofstream fichier("test.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+	ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
 
 	if(fichier)
 	{
@@ -100,8 +100,7 @@ double fonction_exact(double condition ,double x )
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////RC///////////////////////////////////////////////////////////////////////////
 
 RC::RC()
 {
@@ -126,7 +125,7 @@ void RC::resolution()
 	double p4=0;
 	int choix =0;
 	double u = condition1;
-	ofstream fichier("test.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+	ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
 
 	if(fichier)
 	{
@@ -210,6 +209,7 @@ double RC::fonction_exactRC(double t, double V0 , double R , double C )
 
 
 
+////////////////////////////////////////////////RC_diode///////////////////////////////////////////////////////////////////////////
 RC_diode::RC_diode()
 {
 
@@ -234,7 +234,7 @@ RC_diode::RC_diode(double R1,double R2,double C)
 
 void RC_diode::resolution()
 {
-	ofstream fichier("test.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+	ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
 
 	if(fichier)
 	{
@@ -319,7 +319,7 @@ void Fonction2::resolution()
 	double U = 0;
 	double V = 0;
 
-	ofstream fichier("test.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+	ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
 
 	if(fichier)
 	{
@@ -363,7 +363,7 @@ double Fonction2::fonction_exacte(double U0,double V0,double lambda,double t)
 double Fonction2::fonction_propre(double U0,double V0,double lambda){return 0;};
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////RLC_serie////////////////////////////////////////////////////////////////////////////
 
 RLC_serie::RLC_serie() 
 {
@@ -396,7 +396,7 @@ void RLC_serie::resolution()
 	double U = 0;
 	double V = 0;
 
-	ofstream fichier("test.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+	ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
 
 	if(fichier)
 	{
@@ -481,7 +481,7 @@ RLC_parallele::RLC_parallele(double R,double L,double C)
 
 void RLC_parallele::resolution()
 {
-	ofstream fichier("test.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+	ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
 
 	if(fichier)
 	{
