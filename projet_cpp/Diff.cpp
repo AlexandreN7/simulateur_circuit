@@ -71,13 +71,13 @@ void Fonction1::resolution()
 
 	if(fichier)
 	{
-	for(int i = 0 ; i<=N ; i++)
-	{
-		u = u + borne*fonction_propre(u,i*borne);
+		for(int i = 0 ; i<=N ; i++)
+		{
+			u = u + borne*fonction_propre(u,i*borne);
 
-		cout<<u<<endl;
-		fichier <<i*borne<<"\t"<< u<<"\t"<<fonction_exact(condition1,(i+1)*borne)<< endl;
-	}
+			cout<<u<<endl;
+			fichier <<i*borne<<"\t"<< u<<"\t"<<fonction_exact(condition1,(i+1)*borne)<< endl;
+		}
 	}
 
 	else
@@ -375,10 +375,19 @@ RLC_serie::RLC_serie()
 	cin >> this->R;
 }
 
+RLC_serie::RLC_serie(double R,double L,double C) 
+{
+	this->L=L;
+	this->C=C;
+	this->R=R;
+}
+
 double RLC_serie::fonction_propre(double u,double v,double t)
 {
 	return (t-u)/(L*C)-(R/L)*v;
 }
+
+
 void RLC_serie::resolution()
 {
 	int choix=0;
@@ -447,7 +456,7 @@ void RLC_serie::resolution()
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////RLC_PARALLELE///////////////////////////////////////////////////////
 
 RLC_parallele::RLC_parallele() 
 {
@@ -461,7 +470,12 @@ RLC_parallele::RLC_parallele()
 
 
 
-
+RLC_parallele::RLC_parallele(double R,double L,double C) 
+{
+	this->L=L;
+	this->C=C;
+	this->R=R;
+}
 
 
 

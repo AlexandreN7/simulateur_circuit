@@ -74,7 +74,6 @@ class  RC_diode : public Ordre1
     protected:
         double fonction_propre(double , double, double );
 		double fonction_proprepass(double ,double , double, double , double);
-	//	double fonction_exactRC(double, double  , double , double );
     private:
 	double R1;
 	double R2;
@@ -124,7 +123,7 @@ class RLC_serie : public Ordre2
 public:
 
 	RLC_serie();
-//	RLC_serie(double,double,double);
+	RLC_serie(double,double,double);
 	void resolution();
 protected:
 	double fonction_propre(double,double,double);
@@ -139,7 +138,7 @@ class RLC_parallele : public Ordre2
 public:
 
 	RLC_parallele();
-//	RLC_parallele(double,double,double);
+	RLC_parallele(double,double,double);
 	void resolution();
 protected:
 
