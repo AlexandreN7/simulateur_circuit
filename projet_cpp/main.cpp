@@ -10,7 +10,7 @@ int main()
 {
 	// valeur par defaut
 
-	double N = 1e-9; // Pas de calcul
+/*	double N = 1e-9; // Pas de calcul
 	double borne_sup = 500e-9; // Temps max
 	double condition1 = 0; // Première condition initiale 
 	double condition2 = 0; // Seconde condition initiale
@@ -25,7 +25,7 @@ int main()
 	double R4 = 1.2; // Resistance du circuit RLC_parallèle
 	double C2 = 0.1e-6; // Condensateur du circuit RLC_parallèle
 	double L1 = 10e-9; // Bobine du circuit RLC_parallèle
-
+*/
 	menu();
 	return 0;
 }
@@ -51,7 +51,7 @@ void menu(void)
 	{
 		case 1:
 			simulation = new Fonction1();
-			break;
+	break;
 		case 2:
 			cout<<"----====-------------"<<endl;
 			cout<<"-     R             -"<<endl;
@@ -96,4 +96,5 @@ void menu(void)
 	}
 
 	simulation->resolution();
+	cout<< " DONE "<<endl;
 }

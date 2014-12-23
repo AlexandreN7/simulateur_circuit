@@ -1,5 +1,5 @@
 clear all;
-close all;
+
 
 toto=importdata('Simulation.txt')
 

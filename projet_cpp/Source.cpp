@@ -47,12 +47,27 @@ Signal_Perio::Signal_Perio()
 
 Echelon::Echelon()
 {
-	cout << " entrer le temps de start" <<endl;
-	cin >> this->tps_start;
-	cout << " entrer l'amplitude" <<endl;
-	cin >> this->amp;
-	cout << " entrer l'offset" <<endl;
-	cin >> this->offset;
+	int choix =0;
+	cout << "Voulez vous la source echelon par defaut (1) ou manuelle (2)" << endl;
+	cout <<endl;
+	cin >> choix;
+	if (choix == 2)
+	{
+		cout << " entrer le temps de start" <<endl;
+		cin >> this->tps_start;
+		cout << " entrer l'amplitude" <<endl;
+		cin >> this->amp;
+		cout << " entrer l'offset" <<endl;
+		cin >> this->offset;
+	}
+
+	else
+	{
+
+		this->offset=0;// par defaut l'offset est nul
+		this->amp=1; // l'amplitude est de 1
+		this->tps_start=0; // on commence à 0 
+	}
 }
 
 
@@ -126,14 +141,28 @@ double Rectangulaire::calcul_tension(double tps)
 
 Sinus::Sinus()
 {
-	cout << " entrer le temps de start" <<endl;
-	cin >> this->tps_start;
-	cout << " entrer l'amp" <<endl;
-	cin >> this->amp;
-	cout << " entrer l'offset" <<endl;
-	cin >> this->offset;
-	cout << " entrer la fréquence" <<endl;
-	cin >> this->frequency;
+	int choix =0;
+	cout << "Voulez vous la source sinusoidale par defaut (1) ou manuelle (2)" << endl;
+	cout <<endl;
+	cin >> choix;
+	if (choix == 2)
+	{
+		cout << " entrer le temps de start" <<endl;
+		cin >> this->tps_start;
+		cout << " entrer l'amp" <<endl;
+		cin >> this->amp;
+		cout << " entrer l'offset" <<endl;
+		cin >> this->offset;
+		cout << " entrer la fréquence" <<endl;
+		cin >> this->frequency;
+	}
+	else
+	{
+		this->tps_start=0; // commence à 0 par defaut
+		this->amp=1;  // amplitude de 1
+		this->offset=0 ;
+		this->frequency=10e6;// 10MHz
+	}
 }
 
 
@@ -178,15 +207,26 @@ Triangulaire::Triangulaire()
 
 double Triangulaire::calcul_tension(double tps)
 {
-	double valeur;
-	if ( (tps>tps_start) && (tps<(tps_start))) {
-		valeur=offset;
-	}
+	double valeur = 0;
+	double periode = 1/frequency;
 
-	else {
-		valeur = offset;
-	}
+	if (tps >0)
+	{
+		if ( tps<tps_start)
+		{
+			tps=tps+periode;
+			return offset;
+		}
+		if (fmod(tps-tps_start,periode) < 0.5*periode)
+		{
+			valeur = 2*amp*fmod(tps-tps_start,periode)/periode+offset;
+		}
+		//	else if (tps < tps _start
+		else {
+			valeur = -2*amp*fmod(tps-tps_start,periode)/periode+2*amp+offset;
+		}
 
+	}
 	return valeur;
 }
 /*Triangulaire::~Triangulaire()
@@ -197,7 +237,7 @@ double Triangulaire::calcul_tension(double tps)
 Carre::Carre()
 {
 	int choix =0;
-	cout << "Voulez vous la source rectangulaire par defaut (1) ou manuelle (2)" << endl;
+	cout << "Voulez vous la source carre par defaut (1) ou manuelle (2)" << endl;
 	cout <<endl;
 	cin >> choix;
 	if (choix == 2)
@@ -236,6 +276,7 @@ double Carre::calcul_tension(double tps)
 		if ( tps<tps_start)
 		{
 			tps=tps+periode;
+			return offset;	
 		}
 		if (fmod(tps-tps_start,periode) < dc*periode)
 		{
@@ -246,8 +287,6 @@ double Carre::calcul_tension(double tps)
 		}
 
 	}
-	//	cout <<"fmod(abs(tps-tps_start),periode)" <<fmod(tps-tps_start,periode) <<endl;
-	//	cout <<dc*periode<<endl;
 	return valeur;
 }
 /*Carre::~Carre()

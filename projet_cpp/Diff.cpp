@@ -76,7 +76,7 @@ void Fonction1::resolution()
 			u = u + borne*fonction_propre(u,i*borne);
 
 			cout<<u<<endl;
-			fichier <<i*borne<<"\t"<< u<<"\t"<<fonction_exact(condition1,(i+1)*borne)<< endl;
+			fichier <<i*borne<<"\t"<< u<<"\t"<<fonction_exact(condition1,(i)*borne)<< endl;
 		}
 	}
 
@@ -104,10 +104,22 @@ double fonction_exact(double condition ,double x )
 
 RC::RC()
 {
-	cout << "Entree votre valeur de C"<<endl;
-	cin >> this->C;
-	cout << "Entree votre valeur de R"<<endl;
-	cin >> this->R;
+	int choix =0;
+	cout<< " Voulez vous les valeurs des composants par defaut (1) (C= 1nF, R=50Ohms) ou non (2) ?" <<endl;
+		cin >> choix;
+	if (choix == 2)
+	{
+		cout << "Entree votre valeur de C"<<endl;
+		cin >> this->C;
+		cout << "Entree votre valeur de R"<<endl;
+		cin >> this->R;
+	}
+	else 
+	{
+		this->C=1e-9;
+		this->R=50;
+
+	}
 }
 
 RC::RC(double C, double R)
@@ -143,13 +155,11 @@ void RC::resolution()
 	{
 		case 1 :
 			{
-				//double borne = borne_sup/(N+1);
 				for(double i = 0 ; i<=borne_sup ; i=i+N)
 				{
 					u = u + N*fonction_propre(u,signal->calcul_tension(i));
-					//  cout<<u<<endl;
 
-					fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+					fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
 
 				}
 			}
@@ -160,10 +170,9 @@ void RC::resolution()
 
 				for(double i = 0 ; i<=borne_sup ; i=i+N)
 				{
-					u = u + N/2*(fonction_propre(u+u*N,signal->calcul_tension(i+N))+fonction_propre(u+N*fonction_propre(u+u*N,signal->calcul_tension(i+N)),signal->calcul_tension(i+N)));//N*fonction_propre(R,C,u,signal->calcul_tension(i));
-					//  cout<<u<<endl;
+					u = u + N/2*(fonction_propre(u+u*N,signal->calcul_tension(i))+fonction_propre(u+N*fonction_propre(u+u*N,signal->calcul_tension(i+N)),signal->calcul_tension(i)));//N*fonction_propre(R,C,u,signal->calcul_tension(i));
 
-					fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+					fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
 
 				}
 			}
@@ -173,14 +182,14 @@ void RC::resolution()
 
 				for(double i = 0 ; i<=borne_sup ; i=i+N)
 				{
-					p1= fonction_propre(u+u*N,signal->calcul_tension(i+N));
-					p2 = fonction_propre(u+p1*N,signal->calcul_tension(i+N));
-					p3 = fonction_propre(u+p2*N,signal->calcul_tension(i+N));
-					p4 = fonction_propre(u+p3*N,signal->calcul_tension(i+N));
+					p1= fonction_propre(u+u*N,signal->calcul_tension(i));
+					p2 = fonction_propre(u+p1*N,signal->calcul_tension(i));
+					p3 = fonction_propre(u+p2*N,signal->calcul_tension(i));
+					p4 = fonction_propre(u+p3*N,signal->calcul_tension(i));
 					u = u + N/6*(p1+2*p2+2*p3+p4);
 					//  cout<<u<<endl;
 
-					fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+					fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
 
 				}
 			}
