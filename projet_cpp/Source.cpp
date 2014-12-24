@@ -53,11 +53,11 @@ Echelon::Echelon()
 	cin >> choix;
 	if (choix == 2)
 	{
-		cout << " entrer le temps de start" <<endl;
+		cout << "entrer le temps de start" <<endl;
 		cin >> this->tps_start;
-		cout << " entrer l'amplitude" <<endl;
+		cout << "entrer l'amplitude" <<endl;
 		cin >> this->amp;
-		cout << " entrer l'offset" <<endl;
+		cout << "entrer l'offset" <<endl;
 		cin >> this->offset;
 	}
 
@@ -83,7 +83,7 @@ double Echelon::calcul_tension(double tps)
 	}
 	else
 	{
-		valeur=0;
+		valeur=offset;
 	}
 	return valeur;
 
@@ -101,18 +101,18 @@ Rectangulaire::Rectangulaire()
 	cin >> choix;
 	if (choix == 2)
 	{
-		cout << " entrer le temps de start" <<endl;
+		cout << "entrer le temps de start" <<endl;
 		cin >> this->tps_start;
-		cout << " entrer l'amplitude" <<endl;
+		cout << "entrer l'amplitude" <<endl;
 		cin >> this->amp;
-		cout << " entrer l'offset" <<endl;
+		cout << "entrer l'offset" <<endl;
 		cin >> this->offset;
-		cout << " entrer la duree" <<endl;
+		cout << "entrer la duree" <<endl;
 		cin >> this->duree;
 	}
 	else
 	{
-		this->tps_start=0;
+		this->tps_start=70e-9;
 		this->amp=1;
 		this->offset=0;
 		this->duree=100e-9;
@@ -123,7 +123,7 @@ double Rectangulaire::calcul_tension(double tps)
 {
 	double valeur;
 	if ( (tps>tps_start) && (tps<(tps_start+duree))) {
-		valeur=offset;
+		valeur=offset+amp;
 	}
 
 	else {
@@ -147,13 +147,13 @@ Sinus::Sinus()
 	cin >> choix;
 	if (choix == 2)
 	{
-		cout << " entrer le temps de start" <<endl;
+		cout << "entrer le temps de start" <<endl;
 		cin >> this->tps_start;
-		cout << " entrer l'amp" <<endl;
+		cout << "entrer l'amp" <<endl;
 		cin >> this->amp;
-		cout << " entrer l'offset" <<endl;
+		cout << "entrer l'offset" <<endl;
 		cin >> this->offset;
-		cout << " entrer la fréquence" <<endl;
+		cout << "entrer la fréquence" <<endl;
 		cin >> this->frequency;
 	}
 	else
@@ -184,11 +184,11 @@ Triangulaire::Triangulaire()
 	cin >> choix;
 	if (choix == 2)
 	{
-		cout << " entrer le temps de start" <<endl;
+		cout << "entrer le temps de start" <<endl;
 		cin >> this->tps_start;
-		cout << " amplitude ?" <<endl;
+		cout << "amplitude ?" <<endl;
 		cin >> this->amp;
-		cout << " offset ?" <<endl;
+		cout << "offset ?" <<endl;
 		cin >> this->offset;
 		cout << "frequence ?" <<endl;
 		cin >> this->frequency;
@@ -242,11 +242,11 @@ Carre::Carre()
 	cin >> choix;
 	if (choix == 2)
 	{
-		cout << " entrer le temps de start" <<endl;
+		cout << "entrer le temps de start" <<endl;
 		cin >> this->tps_start;
-		cout << " amplitude ?" <<endl;
+		cout << "amplitude ?" <<endl;
 		cin >> this->amp;
-		cout << " offset ?" <<endl;
+		cout << "offset ?" <<endl;
 		cin >> this->offset;
 		cout << "frequence ?" <<endl;
 		cin >> this->frequency;

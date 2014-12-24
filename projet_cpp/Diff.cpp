@@ -86,11 +86,9 @@ void Fonction1::resolution()
 
 	}
 
-
-
-
 	fichier.close();
 }
+
 double fonction_exact(double condition ,double x )
 {
 	return (condition-1./3.)*exp(-3*x)-x+1./3.;
@@ -106,7 +104,7 @@ RC::RC()
 {
 	int choix =0;
 	cout<< " Voulez vous les valeurs des composants par defaut (1) (C= 1nF, R=50Ohms) ou non (2) ?" <<endl;
-		cin >> choix;
+	cin >> choix;
 	if (choix == 2)
 	{
 		cout << "Entree votre valeur de C"<<endl;
@@ -141,7 +139,56 @@ void RC::resolution()
 
 	if(fichier)
 	{
+		cout << "Methode de resoltuion ( 1 Euler , 2 Heun , 3 Runge Kutta ) " <<endl;
+		cin >> choix;
+		switch ( choix)
+		{
+			case 1 :
+				{
+					for(double i = 0 ; i<=borne_sup ; i=i+N)
+					{
+						u = u + N*fonction_propre(u,signal->calcul_tension(i));
 
+						fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+
+					}
+				}
+				break;
+
+			case 2 : //fonctionne HEUN !
+				{
+
+					for(double i = 0 ; i<=borne_sup ; i=i+N)
+					{
+						u = u + N/2*(fonction_propre(u+u*N,signal->calcul_tension(i))+fonction_propre(u+N*fonction_propre(u+u*N,signal->calcul_tension(i+N)),signal->calcul_tension(i)));//N*fonction_propre(R,C,u,signal->calcul_tension(i));
+
+						fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+
+					}
+				}
+				break;
+			case 3: // RUNGE fonctionne
+				{
+
+					for(double i = 0 ; i<=borne_sup ; i=i+N)
+					{
+						p1= fonction_propre(u+u*N,signal->calcul_tension(i));
+						p2 = fonction_propre(u+p1*N,signal->calcul_tension(i));
+						p3 = fonction_propre(u+p2*N,signal->calcul_tension(i));
+						p4 = fonction_propre(u+p3*N,signal->calcul_tension(i));
+						u = u + N/6*(p1+2*p2+2*p3+p4);
+						//  cout<<u<<endl;
+
+						fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+
+					}
+				}
+
+
+
+				break;
+			default:;
+		}
 	}
 
 	else
@@ -149,56 +196,7 @@ void RC::resolution()
 		cerr << "Impossible d'ouvrir le fichier !" << endl;
 
 	}
-	cout << "Methode de resoltuion ( 1 Euler , 2 Heun , 3 Runge Kutta ) " <<endl;
-	cin >> choix;
-	switch ( choix)
-	{
-		case 1 :
-			{
-				for(double i = 0 ; i<=borne_sup ; i=i+N)
-				{
-					u = u + N*fonction_propre(u,signal->calcul_tension(i));
 
-					fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
-
-				}
-			}
-			break;
-
-		case 2 : //fonctionne HEUN !
-			{
-
-				for(double i = 0 ; i<=borne_sup ; i=i+N)
-				{
-					u = u + N/2*(fonction_propre(u+u*N,signal->calcul_tension(i))+fonction_propre(u+N*fonction_propre(u+u*N,signal->calcul_tension(i+N)),signal->calcul_tension(i)));//N*fonction_propre(R,C,u,signal->calcul_tension(i));
-
-					fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
-
-				}
-			}
-			break;
-		case 3: // RUNGE fonctionne
-			{
-
-				for(double i = 0 ; i<=borne_sup ; i=i+N)
-				{
-					p1= fonction_propre(u+u*N,signal->calcul_tension(i));
-					p2 = fonction_propre(u+p1*N,signal->calcul_tension(i));
-					p3 = fonction_propre(u+p2*N,signal->calcul_tension(i));
-					p4 = fonction_propre(u+p3*N,signal->calcul_tension(i));
-					u = u + N/6*(p1+2*p2+2*p3+p4);
-					//  cout<<u<<endl;
-
-					fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
-
-				}
-			}
-
-
-
-			break;
-		default:;
-	}
 
 	fichier.close();
 }
@@ -221,14 +219,25 @@ double RC::fonction_exactRC(double t, double V0 , double R , double C )
 ////////////////////////////////////////////////RC_diode///////////////////////////////////////////////////////////////////////////
 RC_diode::RC_diode()
 {
+	int choix =0;
+	cout<< " Voulez vous les valeurs des composants par defaut (1) (C= 1nF, R1=36 Ohms ,R2=180 Ohm) ou non (2) ?" <<endl;
+	cin >> choix;
 
-	cout << "Entree votre valeur de C"<<endl;
-	cin >> this->C;
-	cout << "Entree votre valeur de R1"<<endl;
-	cin >> this->R1;
-	cout << "Entree votre valeur de R2"<<endl;
-	cin >> this->R2;
-
+	if (choix ==2)
+	{
+		cout << "Entree votre valeur de C"<<endl;
+		cin >> this->C;
+		cout << "Entree votre valeur de R1"<<endl;
+		cin >> this->R1;
+		cout << "Entree votre valeur de R2"<<endl;
+		cin >> this->R2;
+	}
+	else
+	{
+		this->C=1e-9;
+		this->R1=36;
+		this->R2=180;
+	}
 
 }
 
@@ -244,10 +253,23 @@ RC_diode::RC_diode(double R1,double R2,double C)
 void RC_diode::resolution()
 {
 	ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+	double u = condition1;
 
 	if(fichier)
 	{
+		for(double i = 0 ; i<=borne_sup ; i=i+N)
+		{
+			if((signal->calcul_tension(i)) > 0.6)
+			{
+				u = u + N*fonction_proprepass(u,signal->calcul_tension(i));
+			}
 
+			else
+			{
+				u = u + N*fonction_propre(u);
+			}
+			fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+		}
 	}
 
 	else
@@ -255,32 +277,19 @@ void RC_diode::resolution()
 		cerr << "Impossible d'ouvrir le fichier !" << endl;
 
 	}
-	double u = condition1;
 
-	for(double i = 0 ; i<=borne_sup ; i=i+N)
-	{
-		if((signal->calcul_tension(i)) > 0.6)
-		{
-			u = u + N*fonction_proprepass(R1,R2,C,u,signal->calcul_tension(i));
-		}
 
-		else
-		{
-			u = u + N*fonction_propre(R2,C,u);
-		}
-		fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
-	}
 
 	fichier.close();
 }
 
 
-double RC_diode::fonction_propre(double R2 , double C,double U )
+double RC_diode::fonction_propre(double U )
 {
 	return -U/(R2*C);
 }
 
-double RC_diode::fonction_proprepass(double R1,double R2,double C,double U,double Ve  )
+double RC_diode::fonction_proprepass(double U,double Ve  )
 {
 	return 1/(R1*C)*(Ve-0.6-((R1/R2)+1)*U);
 }
