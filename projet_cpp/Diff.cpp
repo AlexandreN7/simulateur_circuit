@@ -450,12 +450,25 @@ double Fonction2::fonction_propre(double U0,double V0,double lambda){return 0;};
 
 RLC_serie::RLC_serie() 
 {
+    int choix =0;
+    cout<< " Voulez vous les valeurs des composants par defaut (1) (C= 0.1 nF, R=120 Ohms ,L=1 uH) ou non (2) ?" <<endl;
+    cin >> choix;
+
+    if (choix ==2)
+    {
     cout << "Entree L"<<endl;
     cin >> this->L;
     cout << "Entree C"<<endl;
     cin >> this->C;
     cout << "Entree R"<<endl;
     cin >> this->R;
+    }
+    else
+    {
+    this->L=1e-6;
+    this->C=1e-10;
+    this->R=120;
+    }
 }
 
 RLC_serie::RLC_serie(double R,double L,double C) 
@@ -482,12 +495,49 @@ void RLC_serie::resolution()
     double p2=0;
     double p3=0;
     double p4=0;
-
+    cout << "Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) " <<endl;
+    cin >> choix;
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
 
     if(fichier)
     {
-        // on essaye d'ouvrir
+        switch (choix)
+        {
+            case 1: 
+                {
+                    for(double i = 0 ; i<=borne_sup ; i=i+N)
+                    {
+
+                        U = u + N*v;
+                        V = v + N*(fonction_propre(u,v,signal->calcul_tension(i)));
+                        fichier <<i<<"\t"<<U<<"\t"<<signal->calcul_tension(i)<< endl;
+                        u=U;
+                        v=V;
+                    }
+                }
+                break;
+
+            case 2 : 
+                {
+                    //double borne = borne_sup/(N+1);
+                    for(double i = 0 ; i<=borne_sup ; i=i+N)
+                    {
+                        u = u + N/2;
+                        //  cout<<u<<endl;
+
+                        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+
+                    }
+
+
+
+                }
+                break;
+            case 3 : 
+                break;
+            default :;
+
+        }   // on essaye d'ouvrir
     }
 
     else
@@ -497,45 +547,8 @@ void RLC_serie::resolution()
     }
 
 
-    cout << "Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) " <<endl;
-    cin >> choix;
-    switch (choix)
-    {
-        case 1: 
-            {
-                for(double i = 0 ; i<=borne_sup ; i=i+N)
-                {
-
-                    U = u + N*v;
-                    V = v + N*(fonction_propre(u,v,signal->calcul_tension(i)));
-                    fichier <<i<<"\t"<<U<<"\t"<<signal->calcul_tension(i)<< endl;
-                    u=U;
-                    v=V;
-                }
-            }
-            break;
-
-        case 2 : 
-            {
-                //double borne = borne_sup/(N+1);
-                for(double i = 0 ; i<=borne_sup ; i=i+N)
-                {
-                    u = u + N/2;
-                    //  cout<<u<<endl;
-
-                    fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
-
-                }
 
 
-
-            }
-            break;
-        case 3 : 
-            break;
-        default :;
-
-    }
 
 
 
@@ -547,12 +560,25 @@ void RLC_serie::resolution()
 
 RLC_parallele::RLC_parallele() 
 {
-    cout << "Entree L"<<endl;
-    cin >> this->L;
-    cout << "Entree C"<<endl;
-    cin >> this->C;
-    cout << "Entree R"<<endl;
-    cin >> this->R;
+    int choix =0;
+    cout<< " Voulez vous les valeurs des composants par defaut (1) (C=0.1 uF, R=1.2 Ohms ,L=10 nH) ou non (2) ?" <<endl;
+    cin >> choix;
+
+    if (choix ==2)
+    {
+        cout << "Entree L"<<endl;
+        cin >> this->L;
+        cout << "Entree C"<<endl;
+        cin >> this->C;
+        cout << "Entree R"<<endl;
+        cin >> this->R;
+    }
+    else
+    {
+        this->L=10e-9;
+        this->C=1e-10;
+        this->R=1.2;
+    }
 }
 
 
