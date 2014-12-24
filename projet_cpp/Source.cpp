@@ -74,7 +74,6 @@ Echelon::Echelon()
 
 double Echelon::calcul_tension(double tps)
 {
-
 	double valeur = offset;
 
 	if (tps >tps_start)
@@ -86,7 +85,6 @@ double Echelon::calcul_tension(double tps)
 		valeur=offset;
 	}
 	return valeur;
-
 }
 /*Echelon::~Echelon()
   {
@@ -153,7 +151,7 @@ Sinus::Sinus()
 		cin >> this->amp;
 		cout << "entrer l'offset" <<endl;
 		cin >> this->offset;
-		cout << "entrer la fréquence" <<endl;
+		cout << "entrer la frequence" <<endl;
 		cin >> this->frequency;
 	}
 	else
@@ -221,7 +219,6 @@ double Triangulaire::calcul_tension(double tps)
 		{
 			valeur = 2*amp*fmod(tps-tps_start,periode)/periode+offset;
 		}
-		//	else if (tps < tps _start
 		else {
 			valeur = -2*amp*fmod(tps-tps_start,periode)/periode+2*amp+offset;
 		}
