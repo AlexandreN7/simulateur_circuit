@@ -140,13 +140,13 @@ class RLC_parallele : public Ordre2
 		RLC_parallele(double,double,double);
 		void resolution();
 	protected:
+        double fonction_propre(double,double,double);
 
 	private:
 
 		double L;
 		double C;
 		double R;
-
 };
 
 

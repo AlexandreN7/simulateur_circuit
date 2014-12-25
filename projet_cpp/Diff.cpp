@@ -456,18 +456,18 @@ RLC_serie::RLC_serie()
 
     if (choix ==2)
     {
-    cout << "Entree L"<<endl;
-    cin >> this->L;
-    cout << "Entree C"<<endl;
-    cin >> this->C;
-    cout << "Entree R"<<endl;
-    cin >> this->R;
+        cout << "Entree L"<<endl;
+        cin >> this->L;
+        cout << "Entree C"<<endl;
+        cin >> this->C;
+        cout << "Entree R"<<endl;
+        cin >> this->R;
     }
     else
     {
-    this->L=1e-6;
-    this->C=1e-10;
-    this->R=120;
+        this->L=1e-6;
+        this->C=1e-10;
+        this->R=120;
     }
 }
 
@@ -495,6 +495,7 @@ void RLC_serie::resolution()
     double p2=0;
     double p3=0;
     double p4=0;
+    double ve =0;
     cout << "Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) " <<endl;
     cin >> choix;
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
@@ -507,10 +508,10 @@ void RLC_serie::resolution()
                 {
                     for(double i = 0 ; i<=borne_sup ; i=i+N)
                     {
-
+                        ve =signal->calcul_tension(i);
                         U = u + N*v;
-                        V = v + N*(fonction_propre(u,v,signal->calcul_tension(i)));
-                        fichier <<i<<"\t"<<U<<"\t"<<signal->calcul_tension(i)<< endl;
+                        V = v + N*(fonction_propre(u,v,ve));
+                        fichier <<i<<"\t"<<U<<"\t"<<ve<< endl;
                         u=U;
                         v=V;
                     }
@@ -519,18 +520,18 @@ void RLC_serie::resolution()
 
             case 2 : 
                 {
-                    //double borne = borne_sup/(N+1);
                     for(double i = 0 ; i<=borne_sup ; i=i+N)
                     {
+                        ve =signal->calcul_tension(i);
+                        U = u + N*v;
+
                         u = u + N/2;
-                        //  cout<<u<<endl;
+                        u = u + N/2*(fonction_propre(u+u*N,signal->calcul_tension(i))+fonction_propre(u+N*fonction_propre(u+u*N,signal->calcul_tension(i+N)),signal->calcul_tension(i)));//N*fonction_propre(R,C,u,signal->calcul_tension(i));
+
 
                         fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
 
                     }
-
-
-
                 }
                 break;
             case 3 : 
@@ -576,9 +577,14 @@ RLC_parallele::RLC_parallele()
     else
     {
         this->L=10e-9;
-        this->C=1e-10;
+        this->C=1e-7;
         this->R=1.2;
     }
+}
+
+double RLC_parallele::fonction_propre(double u,double v,double t)
+{
+    return  (t-v)/(R*C)-u/(C*L);
 }
 
 
@@ -595,10 +601,22 @@ RLC_parallele::RLC_parallele(double R,double L,double C)
 void RLC_parallele::resolution()
 {
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-
+    double u = condition1;
+    double v = condition2;
+    double U = 0;
+    double V = 0;
+    double ve =0;
     if(fichier)
     {
-        // on essaye d'ouvrir
+        for(double i = 0 ; i<=borne_sup ; i=i+N)
+        {
+            ve = signal->calcul_tension(i);
+            U = u + N*v;
+            V = v + N*fonction_propre(u,v,(signal->calcul_tension(i+N)-ve)/N);
+            fichier <<i<<"\t"<<U<<"\t"<<ve<< endl;
+            u=U;
+            v=V;
+        }      
     }
 
     else
@@ -606,25 +624,6 @@ void RLC_parallele::resolution()
         cerr << "Impossible d'ouvrir le fichier !" << endl;
 
     }
-
-    double u = condition1;
-    double v = condition2;
-    double U = 0;
-    double V = 0;
-
-    for(double i = 0 ; i<=borne_sup ; i=i+N)
-    {
-
-        U = u + N*v;
-        V = v + N*(((signal->calcul_tension(i+N)-signal->calcul_tension(i))/N-v)/(R*C)-u/(C*L));
-
-
-        fichier <<i<<"\t"<<U<<"\t"<<signal->calcul_tension(i)<< endl;
-        u=U;
-        v=V;
-    }
-
     fichier.close();
-
 }
 
