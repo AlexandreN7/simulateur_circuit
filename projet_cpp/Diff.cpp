@@ -526,7 +526,7 @@ void RLC_serie::resolution()
                         U = u + N*v;
 
                         u = u + N/2;
-                        u = u + N/2*(fonction_propre(u+u*N,signal->calcul_tension(i))+fonction_propre(u+N*fonction_propre(u+u*N,signal->calcul_tension(i+N)),signal->calcul_tension(i)));//N*fonction_propre(R,C,u,signal->calcul_tension(i));
+           //             u = u + N/2*(fonction_propre(u+u*N,signal->calcul_tension(i))+fonction_propre(u+N*fonction_propre(u+u*N,signal->calcul_tension(i+N)),signal->calcul_tension(i)));//N*fonction_propre(R,C,u,signal->calcul_tension(i));
 
 
                         fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
@@ -535,6 +535,20 @@ void RLC_serie::resolution()
                 }
                 break;
             case 3 : 
+                for(double i = 0; i<= borne_sup ; i=i+N)
+                {
+                    ve =signal->calcul_tension(i);
+                    p1= fonction_propre(u+u*N,v+v*N,ve);
+                    p2 = fonction_propre(u+p1*N,v+v*N,ve);
+                    p3 = fonction_propre(u+p2*N,v+v*N,ve);
+                    p4 = fonction_propre(u+p3*N,v+v*N,ve);
+
+                    u = u + N/6*(p1+2*p2+2*p3+p4);
+                    v = v +N/6*(p1+2*p2+2*p3+p4);
+                    fichier <<i<<"\t"<<u<<"\t"<<ve<< endl;
+
+
+                }
                 break;
             default :;
 
