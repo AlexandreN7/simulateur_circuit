@@ -522,15 +522,17 @@ void RLC_serie::resolution()
                 }
                 break;
 
-            case 2 : 
+            case 2 : // Méthode de HEUN pour équation différentielle  du second ordre
                 {
                     for(double i = 0 ; i<=borne_sup ; i=i+N)
                     {
+                        //etape 1
                         p1= v;
                         l1= fonction_propre(u,v,signal->calcul_tension(i));
 
-                        p2= (v+N*l1/2);
-                        l2= fonction_propre(u+N*p1/2,v+N*l1/2,signal->calcul_tension(i+N));
+                        //etape 2
+                        p2= (v+N*l1);
+                        l2= fonction_propre(u+N*p1,v+N*l1,signal->calcul_tension(i+N));
 
                         u=u+N/2*(p1+p2);
                         v=v+N/2*(l1+l2);
@@ -543,20 +545,20 @@ void RLC_serie::resolution()
                 {
                     for(double i = 0; i<= borne_sup ; i=i+N)
                     {
-                        p1= N*v;
-                        l1= N*fonction_propre(u,v,signal->calcul_tension(i+N));
+                        p1= v;
+                        l1= fonction_propre(u,v,signal->calcul_tension(i));
 
-                        p2= N*(v+l1/2);
-                        l2= N*fonction_propre(u+p1/2,v+l1/2,signal->calcul_tension(i+N));
+                        p2= (v+N*l1/2);
+                        l2= fonction_propre(u+N*p1/2,v+N*l1/2,signal->calcul_tension(i+N/2));
 
-                        p3= N*(v+l2/2);
-                        l3= N*fonction_propre(u+p2/2,v+l2/2,signal->calcul_tension(i+N));
+                        p3= (v+N*l2/2);
+                        l3= fonction_propre(u+N*p2/2,v+N*l2/2,signal->calcul_tension(i+N/2));
 
-                        p4= N*(v+l3);
-                        l4= N*fonction_propre(u+p3,v+l3,signal->calcul_tension(i+N));
+                        p4= (v+N*l3);
+                        l4= fonction_propre(u+N*p3,v+N*l3,signal->calcul_tension(i+N));
 
-                        u=u+1/6*(p1+2*p2+2*p3+p4);
-                        v=v+1/6*(l1+2*l2+2*l3+l4);
+                        u=u+N/6*(p1+2*p2+2*p3+p4);
+                        v=v+N/6*(l1+2*l2+2*l3+l4);
 
                         fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
 
@@ -590,7 +592,7 @@ void RLC_serie::resolution()
 RLC_parallele::RLC_parallele() 
 {
     int choix =0;
-    cout<< " Voulez vous les valeurs des composants par defaut (1) (C=0.1 uF, R=1.2 Ohms ,L=10 nH) ou non (2) ?" <<endl;
+    cout<< "Voulez vous les valeurs des composants par defaut (1) (C=0.1 uF, R=1.2 Ohms ,L=10 nH) ou non (2) ?" <<endl;
     cin >> choix;
 
     if (choix ==2)
@@ -629,24 +631,86 @@ RLC_parallele::RLC_parallele(double R,double L,double C)
 void RLC_parallele::resolution()
 {
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-    double u = condition1;
-    double v = condition2;
-    double U = 0;
-    double V = 0;
-    double ve =0;
+    int choix=0;
+    double u=condition1;
+    double v=condition2;
+    double U=0;
+    double V=0;
+    double ve=0;
+    double p1=0,p2=0,p3=0,p4=0;
+    double l1=0,l2=0,l3=0,l4=0;
+    cout<< "Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) " <<endl;
+    cin >> choix;
+
     if(fichier)
     {
-        for(double i = 0 ; i<=borne_sup ; i=i+N)
+        switch (choix)
         {
-            ve = signal->calcul_tension(i);
-            U = u + N*v;
-            V = v + N*fonction_propre(u,v,(signal->calcul_tension(i+N)-ve)/N);
-            fichier <<i<<"\t"<<U<<"\t"<<ve<< endl;
-            u=U;
-            v=V;
-        }      
-    }
+            case 1: 
+                {
+                    for(double i = 0 ; i<=borne_sup ; i=i+N)
+                    {
+                        ve =signal->calcul_tension(i);
+                        U = u + N*v;
+                        V = v + N*fonction_propre(u,v,(signal->calcul_tension(i+N)-ve)/N);
+                        fichier <<i<<"\t"<<U<<"\t"<<ve<< endl;
+                        u=U;
+                        v=V;
+                    }
+                }
+                break;
 
+            case 2 : // Méthode de HEUN pour équation différentielle  du second ordre
+                {
+                    for(double i = 0 ; i<=borne_sup ; i=i+N)
+                    {
+
+                        ve =signal->calcul_tension(i);
+                        //etape 1
+                        p1= v;
+                        l1= fonction_propre(u,v,(signal->calcul_tension(i)-ve)/N);
+
+                        //etape 2
+                        p2= (v+N*l1);
+                        l2= fonction_propre(u+N*p1,v+N*l1,(signal->calcul_tension(i+N)-ve)/N);
+
+                        u=u+N/2*(p1+p2);
+                        v=v+N/2*(l1+l2);
+
+                        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+                    }
+                }
+                break;
+            case 3 : 
+                {
+                    for(double i = 0; i<= borne_sup ; i=i+N)
+                    {
+
+                        ve =signal->calcul_tension(i);
+                        p1= v;
+                        l1= fonction_propre(u,v,(signal->calcul_tension(i)-ve)/N);
+
+                        p2= (v+N*l1/2);
+                        l2= fonction_propre(u+N*p1/2,v+N*l1/2,2*(signal->calcul_tension(i+N/2)-ve)/N);
+
+                        p3= (v+N*l2/2);
+                        l3= fonction_propre(u+N*p2/2,v+N*l2/2,2*(signal->calcul_tension(i+N/2)-ve)/N);
+
+                        p4= (v+N*l3);
+                        l4= fonction_propre(u+N*p3,v+N*l3,(signal->calcul_tension(i+N)-ve)/N);
+
+                        u=u+N/6*(p1+2*p2+2*p3+p4);
+                        v=v+N/6*(l1+2*l2+2*l3+l4);
+
+                        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+
+                    }
+                    break;
+                }
+            default :;
+
+        }   // on essaye d'ouvrir
+    }
     else
     {
         cerr << "Impossible d'ouvrir le fichier !" << endl;
