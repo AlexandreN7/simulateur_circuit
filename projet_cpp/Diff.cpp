@@ -495,6 +495,10 @@ void RLC_serie::resolution()
     double p2=0;
     double p3=0;
     double p4=0;
+    double l1=0;
+    double l2=0;
+    double l3=0;
+    double l4=0;
     double ve =0;
     cout << "Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) " <<endl;
     cin >> choix;
@@ -522,34 +526,44 @@ void RLC_serie::resolution()
                 {
                     for(double i = 0 ; i<=borne_sup ; i=i+N)
                     {
-                        ve =signal->calcul_tension(i);
-                        U = u + N*v;
+                        p1= v;
+                        l1= fonction_propre(u,v,signal->calcul_tension(i));
 
-                        u = u + N/2;
-           //             u = u + N/2*(fonction_propre(u+u*N,signal->calcul_tension(i))+fonction_propre(u+N*fonction_propre(u+u*N,signal->calcul_tension(i+N)),signal->calcul_tension(i)));//N*fonction_propre(R,C,u,signal->calcul_tension(i));
+                        p2= (v+N*l1/2);
+                        l2= fonction_propre(u+N*p1/2,v+N*l1/2,signal->calcul_tension(i+N));
 
+                        u=u+N/2*(p1+p2);
+                        v=v+N/2*(l1+l2);
 
                         fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
-
                     }
                 }
                 break;
             case 3 : 
-                for(double i = 0; i<= borne_sup ; i=i+N)
                 {
-                    ve =signal->calcul_tension(i);
-                    p1= fonction_propre(u+u*N,v+v*N,ve);
-                    p2 = fonction_propre(u+p1*N,v+v*N,ve);
-                    p3 = fonction_propre(u+p2*N,v+v*N,ve);
-                    p4 = fonction_propre(u+p3*N,v+v*N,ve);
+                    for(double i = 0; i<= borne_sup ; i=i+N)
+                    {
+                        p1= N*v;
+                        l1= N*fonction_propre(u,v,signal->calcul_tension(i+N));
 
-                    u = u + N/6*(p1+2*p2+2*p3+p4);
-                    v = v +N/6*(p1+2*p2+2*p3+p4);
-                    fichier <<i<<"\t"<<u<<"\t"<<ve<< endl;
+                        p2= N*(v+l1/2);
+                        l2= N*fonction_propre(u+p1/2,v+l1/2,signal->calcul_tension(i+N));
+
+                        p3= N*(v+l2/2);
+                        l3= N*fonction_propre(u+p2/2,v+l2/2,signal->calcul_tension(i+N));
+
+                        p4= N*(v+l3);
+                        l4= N*fonction_propre(u+p3,v+l3,signal->calcul_tension(i+N));
+
+                        u=u+1/6*(p1+2*p2+2*p3+p4);
+                        v=v+1/6*(l1+2*l2+2*l3+l4);
+
+                        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
 
 
+                    }
+                    break;
                 }
-                break;
             default :;
 
         }   // on essaye d'ouvrir
