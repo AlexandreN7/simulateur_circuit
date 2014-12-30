@@ -1,3 +1,23 @@
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Fichier contenant les methodes des classes définies dans Diff.h
+//Dans l'ordre :
+//-Equation_Diff
+//-Ordre1
+//-Fonction1
+//-RC
+//-RC_diode
+//-Ordre2
+//-Fonction2
+//-RLC_serie
+//-RLC_parallele
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
 #include "Diff.h"
 #include "Source.h"
 #include <math.h>
@@ -12,9 +32,9 @@ Equation_diff::Equation_diff()
     int choix = 0;
     cout << "Entree le pas de calcul"<<endl;
     cin >>  this->N;
-    cout << "Temps maximal ?"<<endl;
+    cout << "Qul est le temps maximal ?"<<endl;
     cin >>  this->borne_sup;
-    cout << " Choisissez la source: sinus(1), pwm(2) ,triangulaire(3) ,rectangulaire(4) ,echelon(5)" << endl;
+    cout << "Choisissez la source: sinus(1), pwm(2) ,triangulaire(3) ,rectangulaire(4) ,echelon(5)" << endl;
     cin >> choix;
 
     switch ( choix) // choix du type de source 
@@ -68,8 +88,7 @@ void Fonction1::resolution()
     double borne = borne_sup/(N+1);
 
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-
-    if(fichier)
+    if(fichier)//on fait un test d'ouverture du fichier (on le fait à chaque fois)
     {
         for(int i = 0 ; i<=N ; i++)
         {
@@ -526,22 +545,20 @@ void RLC_serie::resolution()
                 {
                     for(double i = 0 ; i<=borne_sup ; i=i+N)
                     {
-                        //etape 1
-                        p1= v;
+                        p1= v;//etape 1
                         l1= fonction_propre(u,v,signal->calcul_tension(i));
 
-                        //etape 2
-                        p2= (v+N*l1);
+                        p2= (v+N*l1);//etape 2
                         l2= fonction_propre(u+N*p1,v+N*l1,signal->calcul_tension(i+N));
 
-                        u=u+N/2*(p1+p2);
+                        u=u+N/2*(p1+p2);//calcul a n+1
                         v=v+N/2*(l1+l2);
 
                         fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
                     }
                 }
                 break;
-            case 3 : 
+            case 3 : // Pour utiliser la méthode de Runge Kutta sur une équation d'ordre 2, on transforme l'équation en un systéme d'équation d'ordre 1 (v=u') 
                 {
                     for(double i = 0; i<= borne_sup ; i=i+N)
                     {
