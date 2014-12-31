@@ -386,9 +386,9 @@ double RC_diode::fonction_proprepass(double U,double Ve  )
 
 Ordre2::Ordre2()
 {
-    cout << "Entree votre premiere condition initiale"<<endl;
+    cout << "Entrer votre condition initiale sur u"<<endl;
     cin >> this->condition1;
-    cout << "Entree votre seconde condition initiale"<<endl;
+    cout << "Entrer votre condition initiale sur u'"<<endl;
     cin >> this->condition2;
 }
 
@@ -401,7 +401,7 @@ Ordre2::Ordre2(double condition1 ,double condition2)
 Fonction2::Fonction2()
 {
 
-    cout << "Entree votre lambda"<<endl;
+    cout << "Entrer votre lambda"<<endl;
     cin >> this->lambda;
 }
 
@@ -412,6 +412,10 @@ Fonction2::Fonction2(double lambda)
 }
 
 
+double Fonction2::fonction_propre(double u )
+{
+    return -lambda*u;
+}
 
 
 void Fonction2::resolution()
@@ -420,25 +424,80 @@ void Fonction2::resolution()
     double v = condition2;
     double U = 0;
     double V = 0;
-
+    int choix=0;
+    double p1=0;
+    double p2=0;
+    double p3=0;
+    double p4=0;
+    double l1=0;
+    double l2=0;
+    double l3=0;
+    double l4=0;
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+
+    cout << "Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) "<<endl;
+    cin >> choix;
+
 
     if(fichier)
     {
-        for(double i = 0 ; i<=borne_sup ; i=i+N)
+        switch(choix) 
         {
+            case 1:
+                for(double i = 0 ; i<=borne_sup ; i=i+N)
+                {
 
-            U = u + N*v;
-            V = v + N*(-lambda*u);
+                    U = u + N*v;
+                    V = v + N*fonction_propre(u);
 
 
-            fichier <<i<<"\t"<<U<<"\t"<</*signal->calcul_tension(i)*/fonction_exacte(condition1,condition2,lambda,i)  << endl;
-            u=U;
-            v=V;
+                    fichier <<i+N<<"\t"<<U<<"\t"<<fonction_exacte(i+N)<< endl;
+                    u=U;
+                    v=V;
+                }
+                break;
+
+            case 2:             
+                for(double i = 0 ; i<=borne_sup ; i=i+N)
+                {
+                    p1= v;//etape 1
+                    l1= fonction_propre(u);
+
+                    p2= (v+N*l1);//etape 2
+                    l2= fonction_propre(u);
+
+                    u=u+N/2*(p1+p2);//calcul a n+1
+                    v=v+N/2*(l1+l2);
+
+                    fichier <<i+N<<"\t"<<u<<"\t"<<fonction_exacte(i+N) << endl;
+                }
+                break;
+
+            case 3:
+                for(double i = 0; i<= borne_sup ; i=i+N)
+                    {
+                        p1= v;
+                        l1= fonction_propre(u);
+
+                        p2= (v+N*l1/2);
+                        l2= fonction_propre(u+N*p1/2);
+
+                        p3= (v+N*l2/2);
+                        l3= fonction_propre(u+N*p2/2);
+
+                        p4= (v+N*l3);
+                        l4= fonction_propre(u+N*p3);
+
+                        u=u+N/6*(p1+2*p2+2*p3+p4);
+                        v=v+N/6*(l1+2*l2+2*l3+l4);
+
+                        fichier <<i+N<<"\t"<<u<<"\t"<< fonction_exacte(i+N)<< endl;
+
+
+                    }
+                    break;
         }
-
     }
-
     else
     {
         cerr << "Impossible d'ouvrir le fichier !" << endl;
@@ -455,14 +514,13 @@ void Fonction2::resolution()
 }
 
 
-double Fonction2::fonction_exacte(double U0,double V0,double lambda,double t)
+double Fonction2::fonction_exacte(double t)
 {
 
-    return V0/(sqrt(lambda))*sin(sqrt(lambda)*t)+U0*cos(sqrt(lambda)*t);
+    return condition2/(sqrt(lambda))*sin(sqrt(lambda)*t)+condition1*cos(sqrt(lambda)*t);
 
 };
 
-double Fonction2::fonction_propre(double U0,double V0,double lambda){return 0;};
 
 
 //////////////////////////////////////////////////////RLC_serie////////////////////////////////////////////////////////////////////////////
@@ -708,10 +766,10 @@ void RLC_parallele::resolution()
                         l1= fonction_propre(u,v,(signal->calcul_tension(i)-ve)/N);
 
                         p2= (v+N*l1/2);
-                        l2= fonction_propre(u+N*p1/2,v+N*l1/2,2*(signal->calcul_tension(i+N/2)-ve)/N);
+                        l2= fonction_propre(u+N*p1/2,v+N*l1/2,(signal->calcul_tension(i+N/2)-ve)/N);
 
                         p3= (v+N*l2/2);
-                        l3= fonction_propre(u+N*p2/2,v+N*l2/2,2*(signal->calcul_tension(i+N/2)-ve)/N);
+                        l3= fonction_propre(u+N*p2/2,v+N*l2/2,(signal->calcul_tension(i+N/2)-ve)/N);
 
                         p4= (v+N*l3);
                         l4= fonction_propre(u+N*p3,v+N*l3,(signal->calcul_tension(i+N)-ve)/N);

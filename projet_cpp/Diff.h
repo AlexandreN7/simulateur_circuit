@@ -108,8 +108,8 @@ class Fonction2 : public Ordre2
 		Fonction2(double);
 		void resolution();
 	protected:
-		double fonction_exacte(double,double,double,double);
-		double fonction_propre(double,double,double);
+		double fonction_exacte(double);
+		double fonction_propre(double);
 	private:
 		double lambda;
 
