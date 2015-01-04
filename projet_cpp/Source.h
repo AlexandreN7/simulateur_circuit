@@ -81,6 +81,29 @@ class Rectangulaire : public Signal_Noperio
 
 };
 
+class SolutionExacte1 : public Source
+{
+	public:
+		SolutionExacte1();
+		// ~Echelon();
+
+		double calcul_tension(double tps);
+	protected:
+
+	private:
+        double condition1;
+};
+class SolutionExacte2 : public Source
+{
+	public:
+		SolutionExacte2();
+		// ~Echelon();
+
+		double calcul_tension(double tps);
+	protected:
+
+	private:
+};
 ////////////////////////////////////////////////////////
 
 

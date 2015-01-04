@@ -134,7 +134,27 @@ double Rectangulaire::calcul_tension(double tps)
   {
 //dtor
 }*/
+SolutionExacte1::SolutionExacte1()
+{
+    cout<<"Donner votre condition initiale"<<endl;
+    cin>>this->condition1;
+}
 
+double SolutionExacte1::calcul_tension(double t)
+{
+ return (condition1-1./3.)*exp(-3*t)-t+1./3.;   
+}
+
+SolutionExacte2::SolutionExacte2()
+{
+    cout<<"Donner votre condition initiale"<<endl;
+  //  cin>>this->condition1;
+}
+
+double SolutionExacte2::calcul_tension(double t)
+{
+ return 0;// (condition1-1./3.)*exp(-3*t)-t+1./3.;   
+}
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 Sinus::Sinus()

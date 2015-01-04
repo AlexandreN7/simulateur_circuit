@@ -30,11 +30,11 @@ using namespace std;
 Equation_diff::Equation_diff()
 {
     int choix = 0;
-    cout << "Entree le pas de calcul"<<endl;
+    cout << "Entrer le pas de calcul"<<endl;
     cin >>  this->N;
     cout << "Qul est le temps maximal ?"<<endl;
     cin >>  this->borne_sup;
-    cout << "Choisissez la source: sinus(1), pwm(2) ,triangulaire(3) ,rectangulaire(4) ,echelon(5)" << endl;
+    cout << "Choisissez la source: sinus(1), pwm(2) ,triangulaire(3) ,rectangulaire(4) ,echelon(5), SolutionFonction1(6), SolutionFonction2(7)" << endl;
     cin >> choix;
 
     switch ( choix) // choix du type de source 
@@ -44,6 +44,8 @@ Equation_diff::Equation_diff()
         case 3 : signal = new Triangulaire(); break;
         case 4 : signal = new Rectangulaire(); break;
         case 5 : signal = new Echelon(); break;
+        case 6 : signal = new SolutionExacte1(); break;
+        case 7 : signal = new SolutionExacte2(); break;
     }
 }
 
@@ -60,7 +62,7 @@ Equation_diff::Equation_diff(double pas ,double borne)
 ////////////////////////////////////////ORDRE1/////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Ordre1::Ordre1()
-{	cout << "Entree votre condition initiale"<<endl;
+{	cout << "Entrer votre condition initiale"<<endl;
     cin >> this->condition1;
 }
 
@@ -75,8 +77,8 @@ void Ordre1::resolution_Euler(){
     double u = condition1;
     for(double i = 0 ; i<=borne_sup ; i=i+N)
     {
-        u = u + N*fonction_propre(u,signal->calcul_tension(i));
-        fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+        u = u+N*fonction_propre(u,i);
+        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
     }
     fichier.close();
 }
@@ -87,10 +89,10 @@ void Ordre1::resolution_Heun(){
 
     for(double i = 0 ; i<=borne_sup ; i=i+N)
     {
-        p1 =fonction_propre(u+u*N,signal->calcul_tension(i));
-        p2 =fonction_propre(u+N*p1,signal->calcul_tension(i+N));
+        p1 =fonction_propre(u+u*N,i);
+        p2 =fonction_propre(u+N*p1,i+N);
         u= u+N/2*(p1+p2);
-        fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
     }
     fichier.close();
 
@@ -102,12 +104,12 @@ void Ordre1::resolution_Runge(){
 
     for(double i = 0 ; i<=borne_sup ; i=i+N)
     {
-        p1= fonction_propre(u+u*N,signal->calcul_tension(i));
-        p2 = fonction_propre(u+p1*N,signal->calcul_tension(i));
-        p3 = fonction_propre(u+p2*N,signal->calcul_tension(i));
-        p4 = fonction_propre(u+p3*N,signal->calcul_tension(i));
+        p1= fonction_propre(u+u*N,i);
+        p2 = fonction_propre(u+p1*N,i);
+        p3 = fonction_propre(u+p2*N,i);
+        p4 = fonction_propre(u+p3*N,i);
         u = u + N/6*(p1+2*p2+2*p3+p4);
-        fichier <<i+N<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
     }
     fichier.close();
 }
@@ -119,43 +121,35 @@ Fonction1::Fonction1()
 }
 
 
-double Fonction1::fonction_propre(double x , double t)
-{
-    return -3*x-3*t;
-}
+
 
 void Fonction1::resolution()
 {
-    double u = condition1;
-    double borne = borne_sup/(N+1);
-
-    ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-    if(fichier)//on fait un test d'ouverture du fichier (on le fait à chaque fois)
+int choix =0;
+    cout << " Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) "<<endl;
+    cin >> choix;
+    switch ( choix)
     {
-        for(int i = 0 ; i<=N ; i++)
-        {
-            u = u + borne*fonction_propre(u,i*borne);
+        case 1 :
+            resolution_Euler();
+            break;
 
-            cout<<u<<endl;
-            fichier <<i*borne<<"\t"<< u<<"\t"<<fonction_exact(condition1,(i)*borne)<< endl;
-        }
+        case 2 : //fonctionne HEUN !
+            resolution_Heun();
+            break;
+        case 3: // RUNGE fonctionne
+            resolution_Runge();
+            break;
+        default:;
     }
 
-    else
-    {
-        cerr << "Impossible d'ouvrir le fichier !" << endl;
-
-    }
-    fichier.close();
 }
 
-double fonction_exact(double t)
+double Fonction1::fonction_propre(double u , double i)
 {
-    return (condition1-1./3.)*exp(-3*t)-t+1./3.;
+    double valeur = (-3*u-3*i);
+    return valeur;
 }
-
-
-
 
 
 ////////////////////////////////////////////////RC///////////////////////////////////////////////////////////////////////////
@@ -167,16 +161,15 @@ RC::RC()
     cin >> choix;
     if (choix == 2)
     {
-        cout << "Entree votre valeur de C"<<endl;
+        cout << "Entrer votre valeur de C"<<endl;
         cin >> this->C;
-        cout << "Entree votre valeur de R"<<endl;
+        cout << "Entrer votre valeur de R"<<endl;
         cin >> this->R;
     }
     else 
     {
         this->C=1e-9;
         this->R=50;
-
     }
 }
 
@@ -208,18 +201,12 @@ void RC::resolution()
     }
 }
 
-double RC::fonction_propre(double U , double Ve  )
+double RC::fonction_propre(double u , double i )
 {
-    return (Ve-U)/(R*C);
+    return (signal->calcul_tension(i)-u)/(R*C);
 }
 
 
-
-
-double RC::fonction_exactRC(double t, double V0 , double R , double C )
-{
-    return V0*(1-exp(-t/(R*C)));
-}
 
 
 
@@ -232,11 +219,11 @@ RC_diode::RC_diode()
 
     if (choix ==2)
     {
-        cout << "Entree votre valeur de C"<<endl;
+        cout << "Entrer votre valeur de C"<<endl;
         cin >> this->C;
-        cout << "Entree votre valeur de R1"<<endl;
+        cout << "Entrer votre valeur de R1"<<endl;
         cin >> this->R1;
-        cout << "Entree votre valeur de R2"<<endl;
+        cout << "Entrer votre valeur de R2"<<endl;
         cin >> this->R2;
     }
     else
@@ -279,10 +266,11 @@ void RC_diode::resolution()
 }
 
 
-double RC_diode::fonction_propre(double U,double ve )
+double RC_diode::fonction_propre(double U,double i )
 {
+    double ve =signal->calcul_tension(i);
     if (ve<0.6){
-    return -U/(R2*C);
+        return -U/(R2*C);
     }
     else {
         return 1/(R1*C)*(ve-0.6-((R1/R2)+1)*U);
@@ -444,11 +432,11 @@ RLC_serie::RLC_serie()
 
     if (choix ==2)
     {
-        cout << "Entree L"<<endl;
+        cout << "Entrer L"<<endl;
         cin >> this->L;
-        cout << "Entree C"<<endl;
+        cout << "Entrer C"<<endl;
         cin >> this->C;
-        cout << "Entree R"<<endl;
+        cout << "Entrer R"<<endl;
         cin >> this->R;
     }
     else
@@ -583,11 +571,11 @@ RLC_parallele::RLC_parallele()
 
     if (choix ==2)
     {
-        cout << "Entree L"<<endl;
+        cout << "Entrer L"<<endl;
         cin >> this->L;
-        cout << "Entree C"<<endl;
+        cout << "Entrer C"<<endl;
         cin >> this->C;
-        cout << "Entree R"<<endl;
+        cout << "Entrer R"<<endl;
         cin >> this->R;
     }
     else
