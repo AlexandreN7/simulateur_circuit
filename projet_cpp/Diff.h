@@ -28,9 +28,13 @@ class Ordre1 : public Equation_diff
 	public:
 		Ordre1();
 		Ordre1(double); // constructeur parametrique
+        double resolution_Euler(double,double,double(*)(double,double));
+        double resolution_Heun(double,double,double(*)(double,double));
+        double resolution_Runge(double,double,double(*)(double,double));
 		virtual void resolution(){};
 	protected:
 		double condition1;
+        double (*ptrfon)(double,double);
 	private:
 };
 
@@ -41,11 +45,8 @@ class  Fonction1 : public Ordre1
 		Fonction1();
 		void resolution();
 	protected:
-		double fonction_propre(double , double);
+		double fonction_propre(double,double);
 	private:
-
-
-
 };
 
 class  RC : public Ordre1

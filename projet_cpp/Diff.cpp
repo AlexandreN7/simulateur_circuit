@@ -70,6 +70,16 @@ Ordre1::Ordre1(double condition)
     this->condition1=condition;
 }
 
+double Ordre1::resolution_Euler(double u,double i){
+return 0;
+}
+double Ordre1::resolution_Heun(double u,double i){
+return 0;
+}
+double Ordre1::resolution_Runge(double u,double){
+return 0;
+}
+
 
 ///////////////////////////////////////////////////FONCTION1///////////////////////////////////////////////////////////////
 Fonction1::Fonction1()
@@ -475,27 +485,27 @@ void Fonction2::resolution()
 
             case 3:
                 for(double i = 0; i<= borne_sup ; i=i+N)
-                    {
-                        p1= v;
-                        l1= fonction_propre(u);
+                {
+                    p1= v;
+                    l1= fonction_propre(u);
 
-                        p2= (v+N*l1/2);
-                        l2= fonction_propre(u+N*p1/2);
+                    p2= (v+N*l1/2);
+                    l2= fonction_propre(u+N*p1/2);
 
-                        p3= (v+N*l2/2);
-                        l3= fonction_propre(u+N*p2/2);
+                    p3= (v+N*l2/2);
+                    l3= fonction_propre(u+N*p2/2);
 
-                        p4= (v+N*l3);
-                        l4= fonction_propre(u+N*p3);
+                    p4= (v+N*l3);
+                    l4= fonction_propre(u+N*p3);
 
-                        u=u+N/6*(p1+2*p2+2*p3+p4);
-                        v=v+N/6*(l1+2*l2+2*l3+l4);
+                    u=u+N/6*(p1+2*p2+2*p3+p4);
+                    v=v+N/6*(l1+2*l2+2*l3+l4);
 
-                        fichier <<i+N<<"\t"<<u<<"\t"<< fonction_exacte(i+N)<< endl;
+                    fichier <<i+N<<"\t"<<u<<"\t"<< fonction_exacte(i+N)<< endl;
 
 
-                    }
-                    break;
+                }
+                break;
         }
     }
     else
