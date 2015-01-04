@@ -30,7 +30,7 @@ class Ordre1 : public Equation_diff
         void resolution_Euler(); // methodes de résolution
         void resolution_Heun();
         void resolution_Runge();
-        virtual void resolution(){};
+        void resolution();
     protected:
         double condition1;
         virtual double fonction_propre(double,double){};
@@ -43,7 +43,6 @@ class  Fonction1 : public Ordre1
 {
     public:
         Fonction1();
-        void resolution();
     protected:
         double fonction_propre(double,double);
     private:
@@ -54,7 +53,6 @@ class  RC : public Ordre1
     public:
         RC();
         RC(double,double);
-        void resolution();
     protected:
         double fonction_propre(double,double);
     private:
@@ -68,7 +66,6 @@ class  RC_diode : public Ordre1
     public:
         RC_diode();
         RC_diode(double,double,double);
-        void resolution();
     protected:
         double fonction_propre(double,double);
     private:

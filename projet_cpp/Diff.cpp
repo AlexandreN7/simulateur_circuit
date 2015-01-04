@@ -114,16 +114,7 @@ void Ordre1::resolution_Runge(){
     fichier.close();
 }
 
-
-///////////////////////////////////////////////////FONCTION1///////////////////////////////////////////////////////////////
-Fonction1::Fonction1()
-{
-}
-
-
-
-
-void Fonction1::resolution()
+void Ordre1::resolution()
 {
 int choix =0;
     cout << " Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) "<<endl;
@@ -144,6 +135,12 @@ int choix =0;
     }
 
 }
+
+///////////////////////////////////////////////////FONCTION1///////////////////////////////////////////////////////////////
+Fonction1::Fonction1()
+{
+}
+
 
 double Fonction1::fonction_propre(double u , double i)
 {
@@ -180,26 +177,6 @@ RC::RC(double C, double R)
 }
 
 
-void RC::resolution()
-{
-    int choix =0;
-    cout << " Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) "<<endl;
-    cin >> choix;
-    switch ( choix)
-    {
-        case 1 :
-            resolution_Euler();
-            break;
-
-        case 2 : //fonctionne HEUN !
-            resolution_Heun();
-            break;
-        case 3: // RUNGE fonctionne
-            resolution_Runge();
-            break;
-        default:;
-    }
-}
 
 double RC::fonction_propre(double u , double i )
 {
@@ -244,26 +221,6 @@ RC_diode::RC_diode(double R1,double R2,double C)
 }
 
 
-void RC_diode::resolution()
-{
-    int choix=0;
-    cout << " Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) "<<endl;
-    cin >> choix;
-    switch ( choix)
-    {
-        case 1 :
-            resolution_Euler();
-            break;
-
-        case 2 : //fonctionne HEUN !
-            resolution_Heun();
-            break;
-        case 3: // RUNGE fonctionne
-            resolution_Runge();
-            break;
-        default:;
-    }
-}
 
 
 double RC_diode::fonction_propre(double U,double i )
