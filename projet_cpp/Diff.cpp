@@ -609,7 +609,7 @@ RLC_parallele::RLC_parallele()
 
 double RLC_parallele::fonction_propre(double u,double v,double i)
 {
-    return  ((signal->calcul_tension(i+N)-signal->calcul_tension(i+N))/N-v)/(R*C)-u/(C*L);
+    return  ((signal->calcul_tension(i+N)-signal->calcul_tension(i))/N-v)/(R*C)-u/(C*L);
 }
 
 
