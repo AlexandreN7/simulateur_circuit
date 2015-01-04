@@ -9,8 +9,10 @@ class Equation_diff
     public:
         Equation_diff();
         Equation_diff(double,double);// constructeur parametrique
-        virtual void resolution(){};// resolution classique avec affichage de la solution + la source
-
+        virtual void resolution_Euler(){}; // methodes de résolution
+        virtual void resolution_Heun(){};
+        virtual void resolution_Runge(){};
+        void resolution();
     protected:
         Source *signal; // pointeur vers la source
         double N;
@@ -30,7 +32,6 @@ class Ordre1 : public Equation_diff
         void resolution_Euler(); // methodes de résolution
         void resolution_Heun();
         void resolution_Runge();
-        void resolution();
     protected:
         double condition1;
         virtual double fonction_propre(double,double){};
@@ -72,7 +73,6 @@ class  RC_diode : public Ordre1
         double R1;
         double R2;
         double C;
-
 };
 
 
@@ -83,12 +83,13 @@ class Ordre2 : public Equation_diff
     public:
         Ordre2();
         Ordre2(double,double);
-        virtual void resolution(){};
-
-
+        void resolution_Euler(); // methodes de résolution
+        void resolution_Heun();
+        void resolution_Runge();
     protected:
         double condition1;
         double condition2;
+        virtual double fonction_propre(double,double,double){}; // deux des arguments sont fictifs afin de correspondre aux autres fonctions propres qui ont 3 arguments
     private:
 
 };
@@ -100,10 +101,8 @@ class Fonction2 : public Ordre2
 
         Fonction2();
         Fonction2(double);
-        void resolution();
     protected:
-        double fonction_exacte(double);
-        double fonction_propre(double);
+        double fonction_propre(double,double,double); // deux des arguments sont fictifs afin de correspondre aux autres fonctions propres qui ont 3 arguments
     private:
         double lambda;
 };
@@ -115,7 +114,6 @@ class RLC_serie : public Ordre2
 
         RLC_serie();
         RLC_serie(double,double,double);
-        void resolution();
     protected:
         double fonction_propre(double,double,double);
     private:
@@ -130,12 +128,9 @@ class RLC_parallele : public Ordre2
 
         RLC_parallele();
         RLC_parallele(double,double,double);
-        void resolution();
     protected:
         double fonction_propre(double,double,double);
-
     private:
-
         double L;
         double C;
         double R;

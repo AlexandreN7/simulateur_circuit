@@ -103,6 +103,9 @@ class SolutionExacte2 : public Source
 	protected:
 
 	private:
+        double condition1;
+        double condition2;
+        double lambda;
 };
 ////////////////////////////////////////////////////////
 

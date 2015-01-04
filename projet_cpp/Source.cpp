@@ -147,13 +147,18 @@ double SolutionExacte1::calcul_tension(double t)
 
 SolutionExacte2::SolutionExacte2()
 {
-    cout<<"Donner votre condition initiale"<<endl;
-  //  cin>>this->condition1;
+    cout<<"Donner votre première  condition initiale"<<endl;
+    cin>>this->condition1;
+    cout <<"Donner votre seconde condition initiale"<<endl;
+    cin>> this->condition2;
+    cout <<"Donner la valeur du lambda"<<endl;
+    cin>> this -> lambda;
 }
 
 double SolutionExacte2::calcul_tension(double t)
 {
- return 0;// (condition1-1./3.)*exp(-3*t)-t+1./3.;   
+ return (condition2/(sqrt(lambda))*sin(sqrt(lambda)*t)+condition1*cos(sqrt(lambda)*t));
+;// (condition1-1./3.)*exp(-3*t)-t+1./3.;   
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
