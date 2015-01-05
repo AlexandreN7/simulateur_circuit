@@ -89,16 +89,14 @@ class Ordre2 : public Equation_diff
     protected:
         double condition1;
         double condition2;
-        virtual double fonction_propre(double,double,double){}; // deux des arguments sont fictifs afin de correspondre aux autres fonctions propres qui ont 3 arguments
+        virtual double fonction_propre(double,double,double){}; 
     private:
-
 };
 
 
 class Fonction2 : public Ordre2
 {
     public:
-
         Fonction2();
         Fonction2(double);
     protected:
@@ -111,7 +109,6 @@ class Fonction2 : public Ordre2
 class RLC_serie : public Ordre2
 {
     public:
-
         RLC_serie();
         RLC_serie(double,double,double);
     protected:
@@ -125,7 +122,6 @@ class RLC_serie : public Ordre2
 class RLC_parallele : public Ordre2
 {
     public:
-
         RLC_parallele();
         RLC_parallele(double,double,double);
     protected:

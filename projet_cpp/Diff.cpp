@@ -1,4 +1,3 @@
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Fichier contenant les methodes des classes définies dans Diff.h
 //Dans l'ordre :
@@ -12,8 +11,6 @@
 //-RLC_serie
 //-RLC_parallele
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 
 
@@ -55,7 +52,7 @@ Equation_diff::Equation_diff(double pas ,double borne)
     this->borne_sup=borne;
 }
 
-void Equation_diff::resolution()
+void Equation_diff::resolution()// fonction qui permet le choix des methodes de résolutions
 {
     int choix =0;
     cout << " Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) "<<endl;
@@ -65,8 +62,7 @@ void Equation_diff::resolution()
         case 1 :
             resolution_Euler();
             break;
-
-        case 2 : //fonctionne HEUN !
+        case 2 :        
             resolution_Heun();
             break;
         case 3: // RUNGE fonctionne
@@ -74,10 +70,7 @@ void Equation_diff::resolution()
             break;
         default:;
     }
-
 }
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////ORDRE1/////////////////////////////////////////////////////////////////////////////
@@ -135,19 +128,16 @@ void Ordre1::resolution_Runge(){
     fichier.close();
 }
 
-
 ///////////////////////////////////////////////////FONCTION1///////////////////////////////////////////////////////////////
 Fonction1::Fonction1()
 {
 }
-
 
 double Fonction1::fonction_propre(double u , double i)
 {
     double valeur = (-3*u-3*i);
     return valeur;
 }
-
 
 ////////////////////////////////////////////////RC///////////////////////////////////////////////////////////////////////////
 
@@ -176,15 +166,10 @@ RC::RC(double C, double R)
     this->R=R;
 }
 
-
-
 double RC::fonction_propre(double u , double i )
 {
     return (signal->calcul_tension(i)-u)/(R*C);
 }
-
-
-
 
 
 ////////////////////////////////////////////////RC_diode///////////////////////////////////////////////////////////////////////////
@@ -209,7 +194,6 @@ RC_diode::RC_diode()
         this->R1=36;
         this->R2=180;
     }
-
 }
 
 RC_diode::RC_diode(double R1,double R2,double C)
@@ -219,9 +203,6 @@ RC_diode::RC_diode(double R1,double R2,double C)
     this->R2=R2;
     this->C=C;
 }
-
-
-
 
 double RC_diode::fonction_propre(double U,double i )
 {
@@ -255,7 +236,6 @@ Ordre2::Ordre2(double condition1 ,double condition2)
 }
 
 void Ordre2::resolution_Euler(){
-
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
     double u = condition1;
     double v = condition2;
@@ -263,7 +243,7 @@ void Ordre2::resolution_Euler(){
     for(double i = 0 ; i<=borne_sup ; i=i+N)
     {
         U = u + N*v;
-        V = v + N*(fonction_propre(u,v,i));
+        V = v + N*fonction_propre(u,v,i);
         fichier <<i<<"\t"<<U<<"\t"<<signal->calcul_tension(i)<< endl;
         u=U;
         v=V;
@@ -299,7 +279,6 @@ void Ordre2::resolution_Runge(){
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
     for(double i = 0; i<= borne_sup ; i=i+N)
     {
-
         p1= v;
         l1= fonction_propre(u,v,i);
 
@@ -316,132 +295,27 @@ void Ordre2::resolution_Runge(){
         v=v+N/6*(l1+2*l2+2*l3+l4);
 
         fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
-
     }
-
-
 }
 
 ////////////////////////////////Classe fille de Ordre2 //////////////////////////////
 Fonction2::Fonction2()
 {
-
-    cout << "Entrer votre lambda"<<endl;
+    cout << "Entrer le lambda"<<endl;
     cin >> this->lambda;
 }
 
 Fonction2::Fonction2(double lambda)
 {
-
     this->lambda=lambda;
 }
 
 
 double Fonction2::fonction_propre(double u,double fictif1,double fictif2 )
 {
-    return (-lambda*u);
+    double valeur=-lambda*u;
+    return valeur;
 }
-
-/*
-   void Fonction2::resolution()
-   {
-   double u = condition1;
-   double v = condition2;
-   double U = 0;
-   double V = 0;
-   int choix=0;
-   double p1=0;
-   double p2=0;
-   double p3=0;
-   double p4=0;
-   double l1=0;
-   double l2=0;
-   double l3=0;
-   double l4=0;
-   ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-
-   cout << "Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) "<<endl;
-   cin >> choix;
-
-
-   if(fichier)
-   {
-   switch(choix) 
-   {
-   case 1:
-   for(double i = 0 ; i<=borne_sup ; i=i+N)
-   {
-
-   U = u + N*v;
-   V = v + N*fonction_propre(u);
-
-
-   fichier <<i+N<<"\t"<<U<<"\t"<<fonction_exacte(i+N)<< endl;
-   u=U;
-   v=V;
-   }
-   break;
-
-   case 2:             
-   for(double i = 0 ; i<=borne_sup ; i=i+N)
-   {
-   p1= v;//etape 1
-   l1= fonction_propre(u);
-
-   p2= (v+N*l1);//etape 2
-   l2= fonction_propre(u);
-
-   u=u+N/2*(p1+p2);//calcul a n+1
-   v=v+N/2*(l1+l2);
-
-   fichier <<i+N<<"\t"<<u<<"\t"<<fonction_exacte(i+N) << endl;
-   }
-   break;
-
-   case 3:
-   for(double i = 0; i<= borne_sup ; i=i+N)
-   {
-   p1= v;
-   l1= fonction_propre(u);
-
-   p2= (v+N*l1/2);
-   l2= fonction_propre(u+N*p1/2);
-
-   p3= (v+N*l2/2);
-   l3= fonction_propre(u+N*p2/2);
-
-   p4= (v+N*l3);
-   l4= fonction_propre(u+N*p3);
-
-u=u+N/6*(p1+2*p2+2*p3+p4);
-v=v+N/6*(l1+2*l2+2*l3+l4);
-
-fichier <<i+N<<"\t"<<u<<"\t"<< fonction_exacte(i+N)<< endl;
-
-
-}
-break;
-}
-}
-else
-{
-    cerr << "Impossible d'ouvrir le fichier !" << endl;
-
-}
-
-
-
-
-// on essaye d'ouvrir
-
-fichier.close();
-
-}
-*/
-
-
-
-
 
 //////////////////////////////////////////////////////RLC_serie////////////////////////////////////////////////////////////////////////////
 
@@ -480,108 +354,6 @@ double RLC_serie::fonction_propre(double u,double v,double i)
     return ((signal->calcul_tension(i)-u)/(L*C)-(R/L)*v);
 }
 
-/*
-   void RLC_serie::resolution()
-   {
-   int choix=0;
-   double u = condition1;
-   double v = condition2;
-   double U = 0;
-   double V = 0;
-   double p1=0;
-   double p2=0;
-   double p3=0;
-   double p4=0;
-   double l1=0;
-   double l2=0;
-   double l3=0;
-   double l4=0;
-   double ve =0;
-   cout << "Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) " <<endl;
-   cin >> choix;
-   ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-
-   if(fichier)
-   {
-   switch (choix)
-   {
-   case 1: 
-   {
-   for(double i = 0 ; i<=borne_sup ; i=i+N)
-   {
-   ve =signal->calcul_tension(i);
-   U = u + N*v;
-   V = v + N*(fonction_propre(u,v,ve));
-   fichier <<i<<"\t"<<U<<"\t"<<ve<< endl;
-   u=U;
-   v=V;
-   }
-   }
-   break;
-
-   case 2 : // Méthode de HEUN pour équation différentielle  du second ordre
-   {
-   for(double i = 0 ; i<=borne_sup ; i=i+N)
-   {
-   p1= v;//etape 1
-   l1= fonction_propre(u,v,signal->calcul_tension(i));
-
-   p2= (v+N*l1);//etape 2
-   l2= fonction_propre(u+N*p1,v+N*l1,signal->calcul_tension(i+N));
-
-   u=u+N/2*(p1+p2);//calcul a n+1
-   v=v+N/2*(l1+l2);
-
-   fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
-   }
-   }
-   break;
-   case 3 : // Pour utiliser la méthode de Runge Kutta sur une équation d'ordre 2, on transforme l'équation en un systéme d'équation d'ordre 1 (v=u') 
-   {
-   for(double i = 0; i<= borne_sup ; i=i+N)
-   {
-   p1= v;
-   l1= fonction_propre(u,v,signal->calcul_tension(i));
-
-   p2= (v+N*l1/2);
-   l2= fonction_propre(u+N*p1/2,v+N*l1/2,signal->calcul_tension(i+N/2));
-
-   p3= (v+N*l2/2);
-   l3= fonction_propre(u+N*p2/2,v+N*l2/2,signal->calcul_tension(i+N/2));
-
-   p4= (v+N*l3);
-   l4= fonction_propre(u+N*p3,v+N*l3,signal->calcul_tension(i+N));
-
-u=u+N/6*(p1+2*p2+2*p3+p4);
-v=v+N/6*(l1+2*l2+2*l3+l4);
-
-fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
-
-
-}
-break;
-}
-default :;
-
-}   // on essaye d'ouvrir
-}
-
-else
-{
-    cerr << "Impossible d'ouvrir le fichier !" << endl;
-
-}
-
-
-
-
-
-
-
-fichier.close();
-
-}
-*/
 /////////////////////////////////RLC_PARALLELE///////////////////////////////////////////////////////
 
 RLC_parallele::RLC_parallele() 
@@ -620,97 +392,3 @@ RLC_parallele::RLC_parallele(double R,double L,double C)
     this->C=C;
     this->R=R;
 }
-
-
-/*
-   void RLC_parallele::resolution()
-   {
-   ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-   int choix=0;
-   double u=condition1;
-   double v=condition2;
-   double U=0;
-   double V=0;
-   double ve=0;
-   double p1=0,p2=0,p3=0,p4=0;
-   double l1=0,l2=0,l3=0,l4=0;
-   cout<< "Methode de resolution: Euler(1), Heun(2), Runge Kutta(3) " <<endl;
-   cin >> choix;
-
-   if(fichier)
-   {
-   switch (choix)
-   {
-   case 1: 
-   {
-   for(double i = 0 ; i<=borne_sup ; i=i+N)
-   {
-   ve =signal->calcul_tension(i);
-   U = u + N*v;
-   V = v + N*fonction_propre(u,v,(signal->calcul_tension(i+N)-ve)/N);
-   fichier <<i<<"\t"<<U<<"\t"<<ve<< endl;
-   u=U;
-   v=V;
-   }
-   }
-   break;
-
-   case 2 : // Méthode de HEUN pour équation différentielle  du second ordre
-   {
-   for(double i = 0 ; i<=borne_sup ; i=i+N)
-   {
-
-   ve =signal->calcul_tension(i);
-//etape 1
-p1= v;
-l1= fonction_propre(u,v,(signal->calcul_tension(i)-ve)/N);
-
-//etape 2
-p2= (v+N*l1);
-l2= fonction_propre(u+N*p1,v+N*l1,(signal->calcul_tension(i+N)-ve)/N);
-
-u=u+N/2*(p1+p2);
-v=v+N/2*(l1+l2);
-
-fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
-}
-}
-break;
-case 3 : 
-{
-for(double i = 0; i<= borne_sup ; i=i+N)
-{
-
-ve =signal->calcul_tension(i);
-p1= v;
-l1= fonction_propre(u,v,(signal->calcul_tension(i)-ve)/N);
-
-p2= (v+N*l1/2);
-l2= fonction_propre(u+N*p1/2,v+N*l1/2,(signal->calcul_tension(i+N/2)-ve)/N);
-
-p3= (v+N*l2/2);
-l3= fonction_propre(u+N*p2/2,v+N*l2/2,(signal->calcul_tension(i+N/2)-ve)/N);
-
-p4= (v+N*l3);
-l4= fonction_propre(u+N*p3,v+N*l3,(signal->calcul_tension(i+N)-ve)/N);
-
-u=u+N/6*(p1+2*p2+2*p3+p4);
-v=v+N/6*(l1+2*l2+2*l3+l4);
-
-fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
-
-}
-break;
-}
-default :;
-
-}   // on essaye d'ouvrir
-}
-else
-{
-    cerr << "Impossible d'ouvrir le fichier !" << endl;
-
-}
-fichier.close();
-}
-*/
