@@ -222,7 +222,7 @@ Carre::Carre()
     }
     else 
     {
-        this->tps_start=0;
+        this->tps_start=50e-9;
         this->amp=1;
         this->offset=0;
         this->frequency=10e6; //10 MHz

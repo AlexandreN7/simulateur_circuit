@@ -13,8 +13,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
 #include "Diff.h"
 #include "Source.h"
 #include <math.h>
@@ -244,7 +242,7 @@ void Ordre2::resolution_Euler(){
     {
         U = u + N*v;
         V = v + N*fonction_propre(u,v,i);
-        fichier <<i<<"\t"<<U<<"\t"<<signal->calcul_tension(i)<< endl;
+        fichier <<i+N<<"\t"<<U<<"\t"<<signal->calcul_tension(i)<< endl;
         u=U;
         v=V;
     }
@@ -277,22 +275,22 @@ void Ordre2::resolution_Runge(){
     double u = condition1;
     double v = condition2;
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-    for(double i = 0; i<= borne_sup ; i=i+N)
+    for(double i = 1; i<= borne_sup ; i=i+N)
     {
-        p1= v;
-        l1= fonction_propre(u,v,i);
+        p1= N*v;
+        l1= N*fonction_propre(u,v,i);
 
-        p2= (v+N*l1/2);
-        l2= fonction_propre(u+N*p1/2,v+N*l1/2,i+N/2);
+        p2= N*(v+l1/2);
+        l2= N*fonction_propre(u+p1/2,v+l1/2,i+N/2);
 
-        p3= (v+N*l2/2);
-        l3= fonction_propre(u+N*p2/2,v+N*l2/2,i+N/2);
+        p3= N*(v+l2/2);
+        l3= N*fonction_propre(u+p2/2,v+l2/2,i+N/2);
 
-        p4= (v+N*l3);
-        l4= fonction_propre(u+N*p3,v+N*l3,i+N);
+        p4= N*(v+l3);
+        l4= N*fonction_propre(u+p3,v+l3,i+N);
 
-        u=u+N/6*(p1+2*p2+2*p3+p4);
-        v=v+N/6*(l1+2*l2+2*l3+l4);
+        u=u+(p1+2*p2+2*p3+p4)/6;
+        v=v+(l1+2*l2+2*l3+l4)/6;
 
         fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
     }
@@ -313,10 +311,8 @@ Fonction2::Fonction2(double lambda)
 
 double Fonction2::fonction_propre(double u,double fictif1,double fictif2 )
 {
-    double valeur=-lambda*u;
-    return valeur;
+      return (-lambda*u);
 }
-
 //////////////////////////////////////////////////////RLC_serie////////////////////////////////////////////////////////////////////////////
 
 RLC_serie::RLC_serie() 
@@ -383,7 +379,6 @@ double RLC_parallele::fonction_propre(double u,double v,double i)
 {
     return  ((signal->calcul_tension(i+N)-signal->calcul_tension(i))/N-v)/(R*C)-u/(C*L);
 }
-
 
 
 RLC_parallele::RLC_parallele(double R,double L,double C) 

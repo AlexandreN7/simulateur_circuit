@@ -89,7 +89,7 @@ class Ordre2 : public Equation_diff
     protected:
         double condition1;
         double condition2;
-        virtual double fonction_propre(double,double,double){}; 
+        virtual double fonction_propre(double,double,double)=0; 
     private:
 };
 
@@ -99,8 +99,8 @@ class Fonction2 : public Ordre2
     public:
         Fonction2();
         Fonction2(double);
-    protected:
         double fonction_propre(double,double,double); // deux des arguments sont fictifs afin de correspondre aux autres fonctions propres qui ont 3 arguments
+    protected:
     private:
         double lambda;
 };
