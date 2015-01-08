@@ -36,7 +36,6 @@ class Ordre1 : public Equation_diff
         double condition1;
         virtual double fonction_propre(double,double){};
     private:
-
 };
 
 

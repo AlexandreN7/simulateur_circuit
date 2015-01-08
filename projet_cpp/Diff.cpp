@@ -88,9 +88,10 @@ void Ordre1::resolution_Euler(){
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
     double u = condition1;
     for(double i = 0 ; i<=borne_sup ; i=i+N)
-    {
-        u = u+N*fonction_propre(u,i);
+    { 
         fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+        u = u+N*fonction_propre(u,i);
+       
     }
     fichier.close();
 }
@@ -101,10 +102,10 @@ void Ordre1::resolution_Heun(){
 
     for(double i = 0 ; i<=borne_sup ; i=i+N)
     {
+        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
         p1 =fonction_propre(u+u*N,i);
         p2 =fonction_propre(u+N*p1,i+N);
         u= u+N/2*(p1+p2);
-        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
     }
     fichier.close();
 
@@ -113,15 +114,14 @@ void Ordre1::resolution_Runge(){
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
     double u = condition1;
     double p1,p2,p3,p4;
-
     for(double i = 0 ; i<=borne_sup ; i=i+N)
     {
+        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
         p1= fonction_propre(u+u*N,i);
         p2 = fonction_propre(u+p1*N,i);
         p3 = fonction_propre(u+p2*N,i);
         p4 = fonction_propre(u+p3*N,i);
         u = u + N/6*(p1+2*p2+2*p3+p4);
-        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
     }
     fichier.close();
 }
@@ -142,7 +142,7 @@ double Fonction1::fonction_propre(double u , double i)
 RC::RC()
 {
     int choix =0;
-    cout<< " Voulez vous les valeurs des composants par defaut (1) (C= 1nF, R=50Ohms) ou non (2) ?" <<endl;
+    cout<< "Voulez vous les valeurs des composants par defaut (1) (C= 1nF, R=50Ohms) ou non (2) ?" <<endl;
     cin >> choix;
     if (choix == 2)
     {
@@ -174,7 +174,7 @@ double RC::fonction_propre(double u , double i )
 RC_diode::RC_diode()
 {
     int choix=0;
-    cout<< " Voulez vous les valeurs des composants par defaut (1) (C= 1nF, R1=36 Ohms ,R2=180 Ohm) ou non (2) ?" <<endl;
+    cout<< "Voulez vous les valeurs des composants par defaut (1) (C= 1nF, R1=36 Ohms ,R2=180 Ohm) ou non (2) ?" <<endl;
     cin >> choix;
 
     if (choix ==2)
@@ -240,13 +240,13 @@ void Ordre2::resolution_Euler(){
     double U,V;
     for(double i = 0 ; i<=borne_sup ; i=i+N)
     {
+        fichier <<i<<"\t"<<U<<"\t"<<signal->calcul_tension(i)<< endl;
         U = u + N*v;
         V = v + N*fonction_propre(u,v,i);
-        fichier <<i+N<<"\t"<<U<<"\t"<<signal->calcul_tension(i)<< endl;
         u=U;
         v=V;
     }
-
+fichier.close();
 }
 void Ordre2::resolution_Heun(){
     double p1,p2,l1,l2; // intermediaires de calcul
@@ -256,6 +256,7 @@ void Ordre2::resolution_Heun(){
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
     for(double i = 0 ; i<=borne_sup ; i=i+N)
     {
+        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
         p1= v;//etape 1
         l1= fonction_propre(u,v,i);
 
@@ -264,9 +265,8 @@ void Ordre2::resolution_Heun(){
 
         u=u+N/2*(p1+p2);//calcul a n+1
         v=v+N/2*(l1+l2);
-
-        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
     }
+    fichier.close();
 }
 
 void Ordre2::resolution_Runge(){
@@ -275,8 +275,9 @@ void Ordre2::resolution_Runge(){
     double u = condition1;
     double v = condition2;
     ofstream fichier("Simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-    for(double i = 1; i<= borne_sup ; i=i+N)
+    for(double i = 0; i<= borne_sup ; i=i+N)
     {
+        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
         p1= N*v;
         l1= N*fonction_propre(u,v,i);
 
@@ -291,9 +292,9 @@ void Ordre2::resolution_Runge(){
 
         u=u+(p1+2*p2+2*p3+p4)/6;
         v=v+(l1+2*l2+2*l3+l4)/6;
-
-        fichier <<i<<"\t"<<u<<"\t"<<signal->calcul_tension(i)<< endl;
+        cout <<u<<endl;
     }
+    fichier.close();
 }
 
 ////////////////////////////////Classe fille de Ordre2 //////////////////////////////

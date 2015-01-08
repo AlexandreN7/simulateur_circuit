@@ -8,7 +8,7 @@ class Source
 {
 	public:
 		Source();
-		virtual double calcul_tension(double tps){return 0;};
+		virtual double calcul_tension(double tps)=0;
 	protected:
 		double tps_start;
 		double amp;
